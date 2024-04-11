@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nsf/controllers/wod/wod.controller.dart';
+import 'package:nsf/mocks/image.dart';
+import 'package:nsf/models/wod/wod_model.dart';
 import 'package:nsf/nfs_translation.dart';
 import 'package:nsf/utils/assets.dart';
 import 'package:nsf/utils/styles/color.dart';
@@ -8,6 +10,7 @@ import 'package:nsf/utils/styles/dimens.dart';
 import 'package:nsf/utils/styles/font.dart';
 import 'package:nsf/utils/styles/theme.dart';
 import 'package:nsf/widgets/app.snak_bar.dart';
+import 'package:nsf/widgets/app_avatar.dart';
 import 'package:nsf/widgets/app_button.dart';
 import 'package:nsf/widgets/app_chip.dart';
 import 'package:nsf/widgets/app_spacer_v.dart';
@@ -49,7 +52,7 @@ class TodayRating extends StatelessWidget {
           children: [
             if (controller.wodState != WodState.noRegistered) ...{
               AppChip(
-                text: controller.wod!.getWodTypeTime,
+                text: controller.myWod!.getWodTypeTime,
                 color: AppColor.gray50,
                 borderColor: AppColor.gray200,
                 textStyle: Theme.of(context).textTheme.textSM.copyWith(
@@ -130,10 +133,17 @@ class TodayRating extends StatelessWidget {
 
   Widget _completedWod(BuildContext context) {
     return Column(
+      children: [_rankPoster(context, _controller.top3Wods![0])],
+    );
+  }
+
+  Widget _rankPoster(BuildContext context, WodModel? wod) {
+    return Column(
       children: [
-        AppText(Message.please_add_exerciese_log,
+        AppAvatar(imageUrl: mockAvatarUrl),
+        AppText('유윤상',
             style: Theme.of(context).textTheme.textMD.copyWith(
-                fontWeight: AppFontWeight.medium, color: AppColor.gray600))
+                color: AppColor.gray900, fontWeight: AppFontWeight.semibold))
       ],
     );
   }

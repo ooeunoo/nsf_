@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:nsf/models/box/box_model.dart';
 import 'package:nsf/models/user/user_model.dart';
 import 'package:nsf/models/wod/wod_model.dart';
@@ -23,15 +24,20 @@ class WodController extends GetxController {
 
   final _client = Supabase.instance.client;
 
-  final Rxn<WodModel> _wod = Rxn<WodModel>();
+  final Rxn<WodModel> _myWod = Rxn<WodModel>();
+  final Rxn<int> _myWodRanking = Rxn<int>(null);
+  final Rxn<List<WodModel>> _top3Wods = Rxn<List<WodModel>>();
 
-  WodModel? get wod => _wod.value;
   WodState get wodState => _refreshWodState();
+  WodModel? get myWod => _myWod.value;
+  int? get myWodRanking => _myWodRanking.value;
+  List<WodModel>? get top3Wods => _top3Wods.value;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    _checkMyWod();
+    await _checkWods();
+    print(myWodRanking);
   }
 
   void onOpenRegisterWodModal() {
@@ -40,30 +46,30 @@ class WodController extends GetxController {
             isScrollControlled: true,
             enableDrag: false,
             useRootNavigator: true)
-        .whenComplete(() {
+        .whenComplete(() async {
       notifyRegisterWod();
-      _checkMyWod();
+      await _checkWods();
     });
   }
 
   void onOpenUpdateWodModal() {
-    Get.bottomSheet(UpdateWodModal(wodId: wod!.id),
+    Get.bottomSheet(UpdateWodModal(wodId: myWod!.id),
             isDismissible: true,
             isScrollControlled: true,
             enableDrag: false,
             useRootNavigator: true)
-        .whenComplete(() {
+        .whenComplete(() async {
       notifyUpdatedWod();
-      _checkMyWod();
+      await _checkWods();
     });
   }
 
   // 와드 상태를 업데이트
   WodState _refreshWodState() {
-    if (wod == null) {
+    if (myWod == null) {
       return WodState.noRegistered;
     }
-    bool completed = wod!.completion;
+    bool completed = myWod!.completion;
 
     if (!completed) {
       return WodState.noCompleted;
@@ -72,40 +78,31 @@ class WodController extends GetxController {
     }
   }
 
-  // 와드 확인
-  _checkMyWod() async {
+  _checkWods() async {
     UserModel? user = _authService.user;
     if (user?.boxId != null) {
       String userId = user!.id;
       int boxId = user.boxId!;
-      _wod.value = await _getMyWod(userId, boxId);
+      List<WodModel> wods = await _getWodsInBox(boxId);
+      int myWodIndex = wods.indexWhere((item) => item.userId == userId);
+      _myWod.value = wods[myWodIndex];
+      _myWodRanking.value = myWodIndex;
+      _top3Wods.value = wods.sublist(0, 2);
     } else {
-      _wod.value = null;
+      _myWod.value = null;
+      _myWodRanking.value = null;
+      _top3Wods.value = null;
     }
   }
 
-  // 와드 가져오기
-  Future<WodModel> _getMyWod(String userId, int boxId) async {
+  Future<List<WodModel>> _getWodsInBox(int boxId) async {
     final data = await _client
         .from('wods')
         .select('*')
-        .eq('user_id', userId)
         .eq('box_id', boxId)
-        .eq('date', getTodayDateTime())
-        .single();
-    return WodModel.fromJson(data);
-  }
+        .order('completion_time', ascending: true)
+        .order('completion_lbs', ascending: true);
 
-  // Stream<WodModel?> _subscribeWod()  {
-  //   UserModel? user = _authService.user;
-  //   if (user?.boxId != null) {
-  //     String userId = user!.id;
-  //     int boxId = user.boxId!;
-  //     _wod.value = _client.from('wods').stream().select('*').eq('user_id', userId)
-  //       .eq('box_id', boxId)
-  //       .eq('date', getTodayDateTime())
-  //   } else {
-  //     _wod.value = null;
-  //   }
-  // }
+    return data.map((d) => WodModel.fromJson(d)).toList();
+  }
 }

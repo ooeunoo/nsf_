@@ -16,4 +16,6 @@ class Assets {
   static String equal = 'assets/icons/equal.svg';
   static String plus = 'assets/icons/plus.svg';
   static String check = 'assets/icons/check.svg';
+  static String success = 'assets/icons/success.svg';
+  static String failure = 'assets/icons/failure.svg';
 }

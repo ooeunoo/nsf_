@@ -44,12 +44,12 @@ class WodModel with _$WodModel {
   String get getWodTypeTime => switch (type) {
         WodType.ForTime => timeLimit == null
             ? type.name
-            : '${type.name}﹒${secondToMinute(timeLimit!)}분 이내',
-        WodType.AMRAP => '${type.name}﹒${secondToMinute(timeLimit!)}분 이내',
-        WodType.EMOM =>
-          '${type.name}﹒${secondToMinute(timeLimit!)}분 이내'
+            : '${type.name} • ${secondToMinute(timeLimit!)}분 이내',
+        WodType.AMRAP => '${type.name} • ${secondToMinute(timeLimit!)}분 이내',
+        WodType.EMOM => '${type.name} • ${secondToMinute(timeLimit!)}분 이내'
       };
-  // '${type.name} - ${convertSecToMin(timeLimt.toString())}';
+
+  bool get successTimeLimit => timeLimit! > completionTime!;
 }
 
 WodModel wodModelFromJson(String str) => WodModel.fromJson(json.decode(str));
