@@ -32,7 +32,7 @@ class AppBottomSheetWrap extends StatelessWidget {
                 child: const AppHandleBar(),
               ),
             ),
-            child
+            child,
           ],
         ),
       ),

@@ -21,7 +21,6 @@ class WodController extends GetxController {
   final _client = Supabase.instance.client;
 
   final Rxn<WodModel> _wod = Rxn<WodModel>();
-  final Rx<WodState> _wodState = Rx<WodState>(WodState.noRegistered);
 
   WodModel? get wod => _wod.value;
   WodState get wodState => _refreshWodState();
@@ -33,7 +32,7 @@ class WodController extends GetxController {
   }
 
   void registerWod() {
-    Get.bottomSheet(const RegisterWod(),
+    Get.bottomSheet(RegisterWod(),
         isDismissible: true,
         isScrollControlled: true,
         enableDrag: false,

@@ -16,9 +16,9 @@ String createWodModelToJson(CreateWodModel data) => json.encode(data.toJson());
 @freezed
 class CreateWodModel with _$CreateWodModel {
   const factory CreateWodModel({
-    required String type,
-    required DateTime date,
-    required int timeLimit,
+    String? type,
+    DateTime? date,
+    int? timeLimit,
   }) = _CreateWodModel;
 
   factory CreateWodModel.fromJson(Map<String, dynamic> json) =>

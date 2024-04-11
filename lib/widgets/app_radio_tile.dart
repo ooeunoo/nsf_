@@ -5,9 +5,10 @@ import 'package:nsf/utils/styles/dimens.dart';
 class AppRadioTile extends StatelessWidget {
   final dynamic value;
   final dynamic groupValue;
-  final Function onChanged;
+  final dynamic onChanged;
   final Widget title;
   final Widget? subtitle;
+  final bool selected;
 
   const AppRadioTile({
     super.key,
@@ -16,6 +17,7 @@ class AppRadioTile extends StatelessWidget {
     required this.onChanged,
     required this.title,
     this.subtitle,
+    required this.selected,
   });
 
   @override
@@ -27,14 +29,14 @@ class AppRadioTile extends StatelessWidget {
         subtitle: subtitle,
         value: value,
         groupValue: groupValue,
-        onChanged: (value) {},
+        onChanged: onChanged,
         contentPadding: EdgeInsets.zero,
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         visualDensity: const VisualDensity(
             horizontal: VisualDensity.minimumDensity,
             vertical: VisualDensity.minimumDensity),
         dense: true,
-        isThreeLine: true,
+        isThreeLine: subtitle != null ? true : false,
         activeColor: AppColor.gray300,
         tileColor: Colors.transparent,
         selectedTileColor: Colors.transparent,

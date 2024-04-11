@@ -1,4 +1,10 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:nsf/controllers/wod/register_wod.controller.dart';
+import 'package:nsf/controllers/wod/wod.controller.dart';
 import 'package:nsf/models/forms/form_short_cut_model.dart';
 import 'package:nsf/models/forms/select_option_model.dart';
 import 'package:nsf/models/wod/wod_model.dart';
@@ -12,176 +18,121 @@ import 'package:nsf/widgets/app_handle_bar.dart';
 import 'package:nsf/widgets/app_radio_tile.dart';
 import 'package:nsf/widgets/app_spacer_v.dart';
 import 'package:nsf/widgets/app_text.dart';
+import 'package:nsf/widgets/app_text_input.dart';
 import 'package:nsf/widgets/form/number_form.dart';
 import 'package:nsf/widgets/form/selection_form.dart';
 
 class RegisterWod extends StatelessWidget {
-  const RegisterWod({super.key});
+  RegisterWod({super.key});
+
+  bool hasTimeLimit = false;
+
+  List<FormShortCutModel> shortcuts = [
+    FormShortCutModel(
+        name: '10분',
+        action: () {
+          print('10분');
+        }),
+    FormShortCutModel(
+        name: '20분',
+        action: () {
+          print('20분');
+        }),
+    FormShortCutModel(
+        name: '30분',
+        action: () {
+          print('30분');
+        }),
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final CreateWodController controller = Get.find();
+
     return AppBottomSheetWrap(
-        child: Padding(
-      padding: EdgeInsets.only(top: AppDimens.size10, bottom: AppDimens.size10),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          NumberForm(
-            title: '시간 제한을 입력해주세요',
-            chipTitle: '운동설정',
-            shortcuts: [
-              FormShortCutModel(
-                  name: '10분',
-                  action: () {
-                    print('10분');
-                  }),
-              FormShortCutModel(
-                  name: '20분',
-                  action: () {
-                    print('20분');
-                  }),
-              FormShortCutModel(
-                  name: '30분',
-                  action: () {
-                    print('30분');
-                  }),
-            ],
-          )
-          // FormSelection(
-          //   chipTitle: '운동설정',
-          //   title: '운동 타입을 설정해주세요',
-          //   options: WodType.values.map((type) {
-          //     return SelectOptionModel(
-          //         title: type.toString(),
-          //         subTitle: type.description.toString(),
-          //         value: type.toString(),
-          //         groupValue: '');
-          //   }).toList(),
-          //   onSelect: () {},
-          // ),
-        ],
+      child: Padding(
+        padding:
+            EdgeInsets.only(top: AppDimens.size10, bottom: AppDimens.size10),
+        child: IndexedStack(
+          index: controller.step,
+          children: [
+            Visibility(
+                visible: controller.step == 0,
+                child: _selectWodType(controller)),
+            Visibility(
+                visible: controller.step == 1, child: _selectTimeLimit()),
+            Visibility(visible: controller.step == 2, child: _inputTimeLimit()),
+          ],
+        ),
       ),
-    ));
+
+      //  const Column(
+      //   mainAxisSize: MainAxisSize.max,
+      //   children: [
+
+      //   ],
+      // ),
+    );
   }
 
-  Widget _selectWodType(BuildContext context) {
-    generateWodTiles(BuildContext context) {
-      return WodType.values.map((type) {
-        return Padding(
-          padding: EdgeInsets.symmetric(vertical: AppDimens.size5),
-          child: AppRadioTile(
-            onChanged: () {},
-            title: AppText(
-              type.toString().split('.').last, // enum 값에서 '.' 이후의 문자열만 가져오기
-              style: Theme.of(context).textTheme.textMD.copyWith(
-                    color: AppColor.gray700,
-                    fontWeight: AppFontWeight.bold,
-                  ),
-            ),
-            subtitle: AppText(
-              type.description,
-              style: Theme.of(context).textTheme.textSM.copyWith(
-                    color: AppColor.gray600,
-                    fontWeight: AppFontWeight.medium,
-                  ),
-            ),
-            value: type,
-            // groupValue: selectedWodType, // 선택된 값에 따라 groupValue 설정
-          ),
-        );
-      }).toList();
-    }
+  Widget _selectWodType(controller) {
+    return FormSelection(
+        chipTitle: '운동설정',
+        title: '운동 타입을 설정해주세요',
+        options: WodType.values.map((type) {
+          return SelectOptionModel(
+              title: type.toString(),
+              subTitle: type.description.toString(),
+              value: type.toString(),
+              groupValue: controller.data.type);
+        }).toList(),
+        onChanged: controller.selectType);
+  }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppDimens.size20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _selectTimeLimit() {
+    return FormSelection(
+      onChanged: (value) {},
+      options: [
+        SelectOptionModel(
+          title: '없어요',
+          value: false,
+          groupValue: hasTimeLimit,
+        ),
+        SelectOptionModel(
+            title: '있어요',
+            value: true,
+            groupValue: hasTimeLimit,
+            expandWidget: Column(
               children: [
-                const AppChip(text: '운동설정'),
-                AppText('운동 타입을 선택해주세요',
-                    style: Theme.of(context).textTheme.textXL.copyWith(
-                        color: AppColor.gray900,
-                        fontWeight: AppFontWeight.bold)),
+                const AppTextInput(
+                    suffixText: '분 이내', inputType: TextInputType.number),
+                AppSpacerV(value: AppDimens.size10),
+                Row(
+                  children: [
+                    ...shortcuts.map((shortcut) {
+                      return GestureDetector(
+                        onTap: shortcut.action,
+                        child: Padding(
+                          padding: EdgeInsets.only(right: AppDimens.size4),
+                          child: AppChip(text: shortcut.name),
+                        ),
+                      );
+                    })
+                  ],
+                )
               ],
             )),
-        const AppSpacerV(),
-        ...generateWodTiles(context),
       ],
+      title: '시간 제한이 있나요?',
+      chipTitle: '운동설정',
     );
   }
 
-  Widget _selectTimeLimit(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: AppDimens.size20v),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppDimens.size20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const AppChip(text: '운동설정'),
-                  AppText('시간 제한이 있나요?',
-                      style: Theme.of(context).textTheme.textXL.copyWith(
-                          color: AppColor.gray900,
-                          fontWeight: AppFontWeight.bold)),
-                ],
-              )),
-          const AppSpacerV(),
-          AppRadioTile(
-            onChanged: () {},
-            title: AppText("For Time",
-                style: Theme.of(context).textTheme.textMD.copyWith(
-                    color: AppColor.gray700, fontWeight: AppFontWeight.bold)),
-            subtitle: AppText("주어진 운동을 최대한 빠르게 수행",
-                style: Theme.of(context).textTheme.textSM.copyWith(
-                    color: AppColor.gray600, fontWeight: AppFontWeight.medium)),
-            value: 1,
-            groupValue: 1,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _inputTimeLimit(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: AppDimens.size20v),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppDimens.size20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const AppChip(text: '운동설정'),
-                  AppText('시간 제한을 입력해주세요.',
-                      style: Theme.of(context).textTheme.textXL.copyWith(
-                          color: AppColor.gray900,
-                          fontWeight: AppFontWeight.bold)),
-                ],
-              )),
-          const AppSpacerV(),
-          AppRadioTile(
-            onChanged: () {},
-            title: AppText("For Time",
-                style: Theme.of(context).textTheme.textMD.copyWith(
-                    color: AppColor.gray700, fontWeight: AppFontWeight.bold)),
-            subtitle: AppText("주어진 운동을 최대한 빠르게 수행",
-                style: Theme.of(context).textTheme.textSM.copyWith(
-                    color: AppColor.gray600, fontWeight: AppFontWeight.medium)),
-            value: 1,
-            groupValue: 1,
-          )
-        ],
-      ),
+  Widget _inputTimeLimit() {
+    return NumberForm(
+      title: '시간 제한을 입력해주세요',
+      chipTitle: '운동설정',
+      shortcuts: shortcuts,
     );
   }
 }
