@@ -34,7 +34,7 @@ class WodController extends GetxController {
     _checkMyWod();
   }
 
-  void registerWod() {
+  void onOpenRegisterWodModal() {
     Get.bottomSheet(const RegisterWodModal(),
             isDismissible: true,
             isScrollControlled: true,
@@ -46,12 +46,16 @@ class WodController extends GetxController {
     });
   }
 
-  void updateWod() {
-    Get.bottomSheet(const UpdateWodModal(),
-        isDismissible: true,
-        isScrollControlled: true,
-        enableDrag: false,
-        useRootNavigator: true);
+  void onOpenUpdateWodModal() {
+    Get.bottomSheet(UpdateWodModal(wodId: wod!.id),
+            isDismissible: true,
+            isScrollControlled: true,
+            enableDrag: false,
+            useRootNavigator: true)
+        .whenComplete(() {
+      notifyUpdatedWod();
+      _checkMyWod();
+    });
   }
 
   // 와드 상태를 업데이트

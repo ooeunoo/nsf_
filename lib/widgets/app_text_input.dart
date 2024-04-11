@@ -16,6 +16,7 @@ class AppTextInput extends StatelessWidget {
   final TextInputType? inputType;
   final TapRegionCallback? onTapOutside;
   final TextEditingController? controller;
+  final TextInputAction? textInputAction;
 
   const AppTextInput({
     super.key,
@@ -29,6 +30,7 @@ class AppTextInput extends StatelessWidget {
     this.onTapOutside,
     this.initialValue,
     this.controller,
+    this.textInputAction,
   });
 
   @override
@@ -55,6 +57,7 @@ class AppTextInput extends StatelessWidget {
         onTapOutside: onTapOutside,
         autofocus: true,
         initialValue: initialValue,
+        textInputAction: textInputAction,
         onChanged: onChanged,
         textAlignVertical: TextAlignVertical.center,
         style: Theme.of(context).textTheme.textMD.copyWith(

@@ -114,7 +114,7 @@ class _RegisterWodModalState extends State<RegisterWodModal> {
             value: true,
             expandWidget: NumberForm(
               shortcuts: shortcuts,
-              // onConfirm: controller.onConfirm,
+              suffixText: '분 이내',
               controller: controller.timeLimitController,
             )),
       ],
@@ -127,6 +127,7 @@ class _RegisterWodModalState extends State<RegisterWodModal> {
       title: '시간 제한을 입력해주세요',
       chipTitle: '운동설정',
       shortcuts: shortcuts,
+      suffixText: '분 이내',
       controller: controller.timeLimitController,
       onConfirm: controller.onConfirm,
     );

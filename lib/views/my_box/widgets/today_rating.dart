@@ -102,7 +102,7 @@ class TodayRating extends StatelessWidget {
                 ),
             color: AppColor.white,
             borderColor: AppColor.gray300,
-            onPressed: _controller.registerWod)
+            onPressed: _controller.onOpenRegisterWodModal)
       ],
     );
   }
@@ -123,7 +123,7 @@ class TodayRating extends StatelessWidget {
                 ),
             color: AppColor.white,
             borderColor: AppColor.gray300,
-            onPressed: _controller.updateWod)
+            onPressed: _controller.onOpenUpdateWodModal)
       ],
     );
   }

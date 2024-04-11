@@ -28,7 +28,8 @@ class CreateWodController extends GetxController {
     timeLimitController.addListener(() {
       if (timeLimitController.text.isNum) {
         _data.value = _data.value.copyWith(
-            timeLimit: convertMinToSec(timeLimitController.text).toString());
+            timeLimit:
+                minuteToSecond(int.parse(timeLimitController.text)).toString());
       }
     });
   }

@@ -6,30 +6,32 @@ import 'package:nsf/utils/styles/font.dart';
 import 'package:nsf/utils/styles/theme.dart';
 import 'package:nsf/widgets/app_button.dart';
 import 'package:nsf/widgets/app_chip.dart';
+import 'package:nsf/widgets/app_spacer_h.dart';
 import 'package:nsf/widgets/app_spacer_v.dart';
 import 'package:nsf/widgets/app_text.dart';
 import 'package:nsf/widgets/app_text_input.dart';
 
-class NumberForm extends StatelessWidget {
+class MultiNumberForm extends StatelessWidget {
   final String? title;
   final String? subTitle;
   final String? chipTitle;
-  final String? suffixText;
   final List<FormShortCutModel>? shortcuts;
   final VoidCallback? onConfirm;
-  final TextEditingController? controller;
+  final TextEditingController? controller1;
+  final TextEditingController? controller2;
+
   final ValueChanged<String>? onChanged;
 
-  const NumberForm(
+  const MultiNumberForm(
       {super.key,
       this.title,
       this.subTitle,
       this.chipTitle,
       this.shortcuts,
       this.onConfirm,
-      this.controller,
-      this.onChanged,
-      this.suffixText});
+      this.controller1,
+      this.controller2,
+      this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +58,26 @@ class NumberForm extends StatelessWidget {
         },
 
         // Input Box
-        AppTextInput(
-          suffixText: suffixText,
-          controller: controller,
-          inputType: TextInputType.number,
-          onChanged: onChanged,
+        Row(
+          children: [
+            Expanded(
+              child: AppTextInput(
+                suffixText: '분',
+                controller: controller1,
+                inputType: TextInputType.number,
+                onChanged: onChanged,
+              ),
+            ),
+            const AppSpacerH(),
+            Expanded(
+              child: AppTextInput(
+                suffixText: '초',
+                controller: controller2,
+                inputType: TextInputType.number,
+                onChanged: onChanged,
+              ),
+            )
+          ],
         ),
         AppSpacerV(value: AppDimens.size10),
 
