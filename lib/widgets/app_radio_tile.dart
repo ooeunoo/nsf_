@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:nsf/utils/styles/color.dart';
 import 'package:nsf/utils/styles/dimens.dart';
 
-class AppRadioTile extends StatelessWidget {
-  final dynamic value;
-  final dynamic groupValue;
-  final dynamic onChanged;
+class AppRadioTile<T> extends StatelessWidget {
+  final T value;
+  final T groupValue;
+  final void Function(T? value) onChanged;
   final Widget title;
   final Widget? subtitle;
   final bool selected;
 
   const AppRadioTile({
     super.key,
-    this.value,
-    this.groupValue,
+    required this.value,
+    required this.groupValue,
     required this.onChanged,
     required this.title,
     this.subtitle,
@@ -37,7 +37,7 @@ class AppRadioTile extends StatelessWidget {
             vertical: VisualDensity.minimumDensity),
         dense: true,
         isThreeLine: subtitle != null ? true : false,
-        activeColor: AppColor.gray300,
+        activeColor: AppColor.brand600,
         tileColor: Colors.transparent,
         selectedTileColor: Colors.transparent,
         controlAffinity: ListTileControlAffinity.leading,

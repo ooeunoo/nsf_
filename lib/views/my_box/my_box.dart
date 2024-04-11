@@ -51,11 +51,11 @@ class MyBoxView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const MyRating(),
+              MyRating(),
               AppSpacerV(
                 value: AppDimens.size10,
               ),
-               TodayRating(),
+              TodayRating(),
               AppSpacerV(
                 value: AppDimens.size10,
               ),

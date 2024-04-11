@@ -20,9 +20,12 @@ CreateWodModel _$CreateWodModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$CreateWodModel {
-  String? get type => throw _privateConstructorUsedError;
+  String? get userId => throw _privateConstructorUsedError;
+  int? get boxId => throw _privateConstructorUsedError;
+  WodType? get type => throw _privateConstructorUsedError;
   DateTime? get date => throw _privateConstructorUsedError;
-  int? get timeLimit => throw _privateConstructorUsedError;
+  bool? get hasTimeLimit => throw _privateConstructorUsedError;
+  String? get timeLimit => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +39,13 @@ abstract class $CreateWodModelCopyWith<$Res> {
           CreateWodModel value, $Res Function(CreateWodModel) then) =
       _$CreateWodModelCopyWithImpl<$Res, CreateWodModel>;
   @useResult
-  $Res call({String? type, DateTime? date, int? timeLimit});
+  $Res call(
+      {String? userId,
+      int? boxId,
+      WodType? type,
+      DateTime? date,
+      bool? hasTimeLimit,
+      String? timeLimit});
 }
 
 /// @nodoc
@@ -52,23 +61,38 @@ class _$CreateWodModelCopyWithImpl<$Res, $Val extends CreateWodModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? userId = freezed,
+    Object? boxId = freezed,
     Object? type = freezed,
     Object? date = freezed,
+    Object? hasTimeLimit = freezed,
     Object? timeLimit = freezed,
   }) {
     return _then(_value.copyWith(
+      userId: freezed == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      boxId: freezed == boxId
+          ? _value.boxId
+          : boxId // ignore: cast_nullable_to_non_nullable
+              as int?,
       type: freezed == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as WodType?,
       date: freezed == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      hasTimeLimit: freezed == hasTimeLimit
+          ? _value.hasTimeLimit
+          : hasTimeLimit // ignore: cast_nullable_to_non_nullable
+              as bool?,
       timeLimit: freezed == timeLimit
           ? _value.timeLimit
           : timeLimit // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String?,
     ) as $Val);
   }
 }
@@ -81,7 +105,13 @@ abstract class _$$CreateWodModelImplCopyWith<$Res>
       __$$CreateWodModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? type, DateTime? date, int? timeLimit});
+  $Res call(
+      {String? userId,
+      int? boxId,
+      WodType? type,
+      DateTime? date,
+      bool? hasTimeLimit,
+      String? timeLimit});
 }
 
 /// @nodoc
@@ -95,45 +125,73 @@ class __$$CreateWodModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? userId = freezed,
+    Object? boxId = freezed,
     Object? type = freezed,
     Object? date = freezed,
+    Object? hasTimeLimit = freezed,
     Object? timeLimit = freezed,
   }) {
     return _then(_$CreateWodModelImpl(
+      userId: freezed == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      boxId: freezed == boxId
+          ? _value.boxId
+          : boxId // ignore: cast_nullable_to_non_nullable
+              as int?,
       type: freezed == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as WodType?,
       date: freezed == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      hasTimeLimit: freezed == hasTimeLimit
+          ? _value.hasTimeLimit
+          : hasTimeLimit // ignore: cast_nullable_to_non_nullable
+              as bool?,
       timeLimit: freezed == timeLimit
           ? _value.timeLimit
           : timeLimit // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String?,
     ));
   }
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.snake)
 class _$CreateWodModelImpl implements _CreateWodModel {
-  const _$CreateWodModelImpl({this.type, this.date, this.timeLimit});
+  const _$CreateWodModelImpl(
+      {this.userId,
+      this.boxId,
+      this.type,
+      this.date,
+      this.hasTimeLimit,
+      this.timeLimit});
 
   factory _$CreateWodModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$CreateWodModelImplFromJson(json);
 
   @override
-  final String? type;
+  final String? userId;
+  @override
+  final int? boxId;
+  @override
+  final WodType? type;
   @override
   final DateTime? date;
   @override
-  final int? timeLimit;
+  final bool? hasTimeLimit;
+  @override
+  final String? timeLimit;
 
   @override
   String toString() {
-    return 'CreateWodModel(type: $type, date: $date, timeLimit: $timeLimit)';
+    return 'CreateWodModel(userId: $userId, boxId: $boxId, type: $type, date: $date, hasTimeLimit: $hasTimeLimit, timeLimit: $timeLimit)';
   }
 
   @override
@@ -141,15 +199,20 @@ class _$CreateWodModelImpl implements _CreateWodModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CreateWodModelImpl &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.boxId, boxId) || other.boxId == boxId) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.date, date) || other.date == date) &&
+            (identical(other.hasTimeLimit, hasTimeLimit) ||
+                other.hasTimeLimit == hasTimeLimit) &&
             (identical(other.timeLimit, timeLimit) ||
                 other.timeLimit == timeLimit));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, type, date, timeLimit);
+  int get hashCode => Object.hash(
+      runtimeType, userId, boxId, type, date, hasTimeLimit, timeLimit);
 
   @JsonKey(ignore: true)
   @override
@@ -168,19 +231,28 @@ class _$CreateWodModelImpl implements _CreateWodModel {
 
 abstract class _CreateWodModel implements CreateWodModel {
   const factory _CreateWodModel(
-      {final String? type,
+      {final String? userId,
+      final int? boxId,
+      final WodType? type,
       final DateTime? date,
-      final int? timeLimit}) = _$CreateWodModelImpl;
+      final bool? hasTimeLimit,
+      final String? timeLimit}) = _$CreateWodModelImpl;
 
   factory _CreateWodModel.fromJson(Map<String, dynamic> json) =
       _$CreateWodModelImpl.fromJson;
 
   @override
-  String? get type;
+  String? get userId;
+  @override
+  int? get boxId;
+  @override
+  WodType? get type;
   @override
   DateTime? get date;
   @override
-  int? get timeLimit;
+  bool? get hasTimeLimit;
+  @override
+  String? get timeLimit;
   @override
   @JsonKey(ignore: true)
   _$$CreateWodModelImplCopyWith<_$CreateWodModelImpl> get copyWith =>

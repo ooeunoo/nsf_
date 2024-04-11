@@ -6,18 +6,19 @@ import 'package:nsf/utils/styles/font.dart';
 import 'package:nsf/utils/styles/theme.dart';
 
 class AppTextInput extends StatelessWidget {
-  final String? initialValue;
   final String? hintText;
+  final String? initialValue;
   final ValueChanged<String>? onChanged;
   final String? prefixText;
   final Widget? prefix;
   final String? suffixText;
   final Widget? suffix;
   final TextInputType? inputType;
+  final TapRegionCallback? onTapOutside;
+  final TextEditingController? controller;
 
   const AppTextInput({
     super.key,
-    this.initialValue,
     this.onChanged,
     this.hintText,
     this.prefix,
@@ -25,6 +26,9 @@ class AppTextInput extends StatelessWidget {
     this.prefixText,
     this.suffixText,
     this.inputType = TextInputType.text,
+    this.onTapOutside,
+    this.initialValue,
+    this.controller,
   });
 
   @override
@@ -47,7 +51,10 @@ class AppTextInput extends StatelessWidget {
         color: Colors.white,
       ),
       child: TextFormField(
+        controller: controller,
+        onTapOutside: onTapOutside,
         autofocus: true,
+        initialValue: initialValue,
         onChanged: onChanged,
         textAlignVertical: TextAlignVertical.center,
         style: Theme.of(context).textTheme.textMD.copyWith(
@@ -56,7 +63,6 @@ class AppTextInput extends StatelessWidget {
             ),
         cursorHeight: 16.sp,
         cursorColor: AppColor.gray500,
-        controller: TextEditingController(text: initialValue),
         keyboardType: inputType,
         decoration: InputDecoration(
             border: InputBorder.none,

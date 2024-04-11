@@ -31,6 +31,7 @@ class AppDimens {
   static double size72 = 72.w;
   static double size90 = 90.w;
   static double size200 = 200.w;
+  static double size230 = 230.w;
 
   // height
   static double size2v = 2.h;

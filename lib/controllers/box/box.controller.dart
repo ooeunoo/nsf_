@@ -21,11 +21,10 @@ class BoxController extends GetxController {
   }
 
   _checkBox() async {
-    print('check box');
-    UserModel? user = _authService.user.value;
+    UserModel? user = _authService.user;
 
-    if (user != null && user.box_id != null) {
-      int boxId = user.box_id!;
+    if (user != null && user.boxId != null) {
+      int boxId = user.boxId!;
       box.value = await _getBox(boxId);
     } else {
       box.value = null;

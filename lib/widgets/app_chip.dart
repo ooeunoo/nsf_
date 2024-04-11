@@ -32,18 +32,17 @@ class AppChip extends StatelessWidget {
             color: borderColor ?? AppColor.brand200),
       ),
       label: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: AppDimens.size10, vertical: AppDimens.size2v),
+        padding:
+            EdgeInsets.symmetric(horizontal: AppDimens.size10, vertical: 0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             AppText(text,
                 align: TextAlign.center,
                 style: textStyle ??
-                    Theme.of(context)
-                        .textTheme
-                        .textSM
-                        .copyWith(color: AppColor.brand700)),
+                    Theme.of(context).textTheme.textSM.copyWith(
+                          color: AppColor.brand700,
+                        )),
           ],
         ),
       ),

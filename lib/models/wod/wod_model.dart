@@ -7,6 +7,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
+import 'package:nsf/utils/time.dart';
+
 part 'wod_model.freezed.dart';
 part 'wod_model.g.dart';
 
@@ -21,20 +23,32 @@ enum WodType {
 
 @freezed
 class WodModel with _$WodModel {
+  const WodModel._();
+
+  @JsonSerializable(fieldRename: FieldRename.snake)
   const factory WodModel({
     required int id,
     required String userId,
     required int boxId,
     required DateTime date,
     required WodType type,
-    int? timeLimt,
+    @Default(0) int? timeLimit,
     @Default(false) bool completion,
-    int? completionTime,
-    int? completionLbs,
+    @Default(null) int? completionTime,
+    @Default(null) int? completionLbs,
   }) = _WodModel;
 
   factory WodModel.fromJson(Map<String, dynamic> json) =>
       _$WodModelFromJson(json);
+
+  String get getWodTypeTime => switch (type) {
+        WodType.ForTime => timeLimit == null
+            ? type.name
+            : '${type.name}﹒${convertSecToMin(timeLimit!)}분 이내',
+        WodType.AMRAP => '${type.name}﹒${convertSecToMin(timeLimit!)}분 이내',
+        WodType.EMOM => '${type.name}﹒${convertSecToMin(timeLimit!)}분 이내'
+      };
+  // '${type.name} - ${convertSecToMin(timeLimt.toString())}';
 }
 
 WodModel wodModelFromJson(String str) => WodModel.fromJson(json.decode(str));

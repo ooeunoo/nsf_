@@ -12,11 +12,19 @@ class AppSvg extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(
-      path,
-      colorFilter: ColorFilter.mode(color ?? AppColor.gray500, BlendMode.srcIn),
-      width: size ?? AppDimens.size24,
-      height: size ?? AppDimens.size24,
-    );
+    if (color != null) {
+      return SvgPicture.asset(
+        path,
+        colorFilter: ColorFilter.mode(color!, BlendMode.srcIn),
+        width: size ?? AppDimens.size24,
+        height: size ?? AppDimens.size24,
+      );
+    } else {
+      return SvgPicture.asset(
+        path,
+        width: size ?? AppDimens.size24,
+        height: size ?? AppDimens.size24,
+      );
+    }
   }
 }

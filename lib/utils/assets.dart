@@ -15,4 +15,5 @@ class Assets {
   static String dots_vertical = 'assets/icons/dots-vertical.svg';
   static String equal = 'assets/icons/equal.svg';
   static String plus = 'assets/icons/plus.svg';
+  static String check = 'assets/icons/check.svg';
 }

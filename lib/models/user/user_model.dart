@@ -15,7 +15,7 @@ class UserModel with _$UserModel {
       required String email,
       required String name,
       String? nickname,
-      int? box_id}) = _UserModel;
+      @JsonKey(name: 'box_id') int? boxId}) = _UserModel;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);

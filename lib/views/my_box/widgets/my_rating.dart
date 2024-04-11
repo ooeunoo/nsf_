@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nsf/controllers/wod/wod.controller.dart';
 import 'package:nsf/mocks/image.dart';
 import 'package:nsf/nfs_translation.dart';
 import 'package:nsf/utils/styles/color.dart';
 import 'package:nsf/utils/styles/dimens.dart';
 import 'package:nsf/utils/styles/font.dart';
 import 'package:nsf/utils/styles/theme.dart';
+import 'package:nsf/widgets/app.snak_bar.dart';
 import 'package:nsf/widgets/app_avatar.dart';
 import 'package:nsf/widgets/app_button.dart';
 import 'package:nsf/widgets/app_spacer_h.dart';
 import 'package:nsf/widgets/app_text.dart';
 
 class MyRating extends StatelessWidget {
-  const MyRating({super.key});
+  MyRating({super.key});
+
+  final WodController _controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        // width: 351,
-        // height: 68,
         padding: EdgeInsets.symmetric(
             horizontal: AppDimens.size20, vertical: AppDimens.size12v),
         decoration: BoxDecoration(
@@ -51,7 +53,10 @@ class MyRating extends StatelessWidget {
                 )
               ],
             ),
-            AppButton(Message.add_log, disable: true, onPressed: () {})
+            Obx(() => AppButton(Message.add_log,
+                    disable: _controller.wod == null, onPressed: () {
+                  notifyRegisterWod();
+                }))
           ],
         ));
   }

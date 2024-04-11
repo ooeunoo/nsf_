@@ -10,16 +10,17 @@ class AuthService extends GetxService {
   AuthService() {
     _subscribeUser().listen((event) async {
       if (event == null) {
-        user.value = null;
+        _user.value = null;
         Get.offAllNamed(Routes.login);
       } else {
-        user.value = await _getCurrentUser(event.id);
+        _user.value = await _getCurrentUser(event.id);
         Get.offAllNamed(Routes.root);
       }
     });
   }
 
-  final Rx<UserModel?> user = (null as UserModel?).obs;
+  final Rx<UserModel?> _user = (null as UserModel?).obs;
+  UserModel? get user => _user.value;
 
   Future<bool> loginWithKakao() async {
     return _client.auth.signInWithOAuth(

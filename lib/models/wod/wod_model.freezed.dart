@@ -25,7 +25,7 @@ mixin _$WodModel {
   int get boxId => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
   WodType get type => throw _privateConstructorUsedError;
-  int? get timeLimt => throw _privateConstructorUsedError;
+  int? get timeLimit => throw _privateConstructorUsedError;
   bool get completion => throw _privateConstructorUsedError;
   int? get completionTime => throw _privateConstructorUsedError;
   int? get completionLbs => throw _privateConstructorUsedError;
@@ -47,7 +47,7 @@ abstract class $WodModelCopyWith<$Res> {
       int boxId,
       DateTime date,
       WodType type,
-      int? timeLimt,
+      int? timeLimit,
       bool completion,
       int? completionTime,
       int? completionLbs});
@@ -71,7 +71,7 @@ class _$WodModelCopyWithImpl<$Res, $Val extends WodModel>
     Object? boxId = null,
     Object? date = null,
     Object? type = null,
-    Object? timeLimt = freezed,
+    Object? timeLimit = freezed,
     Object? completion = null,
     Object? completionTime = freezed,
     Object? completionLbs = freezed,
@@ -97,9 +97,9 @@ class _$WodModelCopyWithImpl<$Res, $Val extends WodModel>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as WodType,
-      timeLimt: freezed == timeLimt
-          ? _value.timeLimt
-          : timeLimt // ignore: cast_nullable_to_non_nullable
+      timeLimit: freezed == timeLimit
+          ? _value.timeLimit
+          : timeLimit // ignore: cast_nullable_to_non_nullable
               as int?,
       completion: null == completion
           ? _value.completion
@@ -131,7 +131,7 @@ abstract class _$$WodModelImplCopyWith<$Res>
       int boxId,
       DateTime date,
       WodType type,
-      int? timeLimt,
+      int? timeLimit,
       bool completion,
       int? completionTime,
       int? completionLbs});
@@ -153,7 +153,7 @@ class __$$WodModelImplCopyWithImpl<$Res>
     Object? boxId = null,
     Object? date = null,
     Object? type = null,
-    Object? timeLimt = freezed,
+    Object? timeLimit = freezed,
     Object? completion = null,
     Object? completionTime = freezed,
     Object? completionLbs = freezed,
@@ -179,9 +179,9 @@ class __$$WodModelImplCopyWithImpl<$Res>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as WodType,
-      timeLimt: freezed == timeLimt
-          ? _value.timeLimt
-          : timeLimt // ignore: cast_nullable_to_non_nullable
+      timeLimit: freezed == timeLimit
+          ? _value.timeLimit
+          : timeLimit // ignore: cast_nullable_to_non_nullable
               as int?,
       completion: null == completion
           ? _value.completion
@@ -200,18 +200,20 @@ class __$$WodModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
-class _$WodModelImpl implements _WodModel {
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class _$WodModelImpl extends _WodModel {
   const _$WodModelImpl(
       {required this.id,
       required this.userId,
       required this.boxId,
       required this.date,
       required this.type,
-      this.timeLimt,
+      this.timeLimit = 0,
       this.completion = false,
-      this.completionTime,
-      this.completionLbs});
+      this.completionTime = null,
+      this.completionLbs = null})
+      : super._();
 
   factory _$WodModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$WodModelImplFromJson(json);
@@ -227,18 +229,21 @@ class _$WodModelImpl implements _WodModel {
   @override
   final WodType type;
   @override
-  final int? timeLimt;
+  @JsonKey()
+  final int? timeLimit;
   @override
   @JsonKey()
   final bool completion;
   @override
+  @JsonKey()
   final int? completionTime;
   @override
+  @JsonKey()
   final int? completionLbs;
 
   @override
   String toString() {
-    return 'WodModel(id: $id, userId: $userId, boxId: $boxId, date: $date, type: $type, timeLimt: $timeLimt, completion: $completion, completionTime: $completionTime, completionLbs: $completionLbs)';
+    return 'WodModel(id: $id, userId: $userId, boxId: $boxId, date: $date, type: $type, timeLimit: $timeLimit, completion: $completion, completionTime: $completionTime, completionLbs: $completionLbs)';
   }
 
   @override
@@ -251,8 +256,8 @@ class _$WodModelImpl implements _WodModel {
             (identical(other.boxId, boxId) || other.boxId == boxId) &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.timeLimt, timeLimt) ||
-                other.timeLimt == timeLimt) &&
+            (identical(other.timeLimit, timeLimit) ||
+                other.timeLimit == timeLimit) &&
             (identical(other.completion, completion) ||
                 other.completion == completion) &&
             (identical(other.completionTime, completionTime) ||
@@ -264,7 +269,7 @@ class _$WodModelImpl implements _WodModel {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, userId, boxId, date, type,
-      timeLimt, completion, completionTime, completionLbs);
+      timeLimit, completion, completionTime, completionLbs);
 
   @JsonKey(ignore: true)
   @override
@@ -280,17 +285,18 @@ class _$WodModelImpl implements _WodModel {
   }
 }
 
-abstract class _WodModel implements WodModel {
+abstract class _WodModel extends WodModel {
   const factory _WodModel(
       {required final int id,
       required final String userId,
       required final int boxId,
       required final DateTime date,
       required final WodType type,
-      final int? timeLimt,
+      final int? timeLimit,
       final bool completion,
       final int? completionTime,
       final int? completionLbs}) = _$WodModelImpl;
+  const _WodModel._() : super._();
 
   factory _WodModel.fromJson(Map<String, dynamic> json) =
       _$WodModelImpl.fromJson;
@@ -306,7 +312,7 @@ abstract class _WodModel implements WodModel {
   @override
   WodType get type;
   @override
-  int? get timeLimt;
+  int? get timeLimit;
   @override
   bool get completion;
   @override
