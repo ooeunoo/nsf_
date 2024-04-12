@@ -28,17 +28,18 @@ class _MessageBarState extends State<MessageBar> {
           padding: EdgeInsets.only(
             right: AppDimens.size10,
             left: AppDimens.size20,
-            bottom:
-                _isKeyboardVisible ? 0 : AppDimens.size20, // 키보드가 나타날 때 패딩 제거
+            bottom: _isKeyboardVisible ? 0 : AppDimens.size20,
           ),
           child: Row(
             children: [
               Expanded(
                 child: AppTextInput(
-                  controller: controller.textController,
+                  autofocus: false,
+                  focusNode: controller.messageFocusNode,
+                  controller: controller.messageController,
                   textInputAction: TextInputAction.newline,
                   onTapOutside: (value) {
-                    FocusScope.of(context).unfocus();
+                    // controller.messageFocusNode.unfocus();
                   },
                   onChanged: (value) {
                     setState(() {

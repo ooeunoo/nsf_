@@ -11,7 +11,9 @@ ThemeData themeLight(BuildContext context) => ThemeData(
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
       scaffoldBackgroundColor: AppColor.gray100,
-      appBarTheme: const AppBarTheme(backgroundColor: AppColor.gray100),
+      appBarTheme: const AppBarTheme(
+          backgroundColor: AppColor.gray100,
+          surfaceTintColor: AppColor.gray100),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: AppColor.gray100,
           type: BottomNavigationBarType.fixed,

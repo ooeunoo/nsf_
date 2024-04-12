@@ -17,6 +17,8 @@ class AppTextInput extends StatelessWidget {
   final TapRegionCallback? onTapOutside;
   final TextEditingController? controller;
   final TextInputAction? textInputAction;
+  final bool autofocus;
+  final FocusNode? focusNode;
 
   const AppTextInput({
     super.key,
@@ -31,6 +33,8 @@ class AppTextInput extends StatelessWidget {
     this.initialValue,
     this.controller,
     this.textInputAction,
+    this.autofocus = true,
+    this.focusNode,
   });
 
   @override
@@ -55,7 +59,8 @@ class AppTextInput extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         onTapOutside: onTapOutside,
-        autofocus: true,
+        autofocus: autofocus,
+        focusNode: focusNode,
         initialValue: initialValue,
         textInputAction: textInputAction,
         onChanged: onChanged,

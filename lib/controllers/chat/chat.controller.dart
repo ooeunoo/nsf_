@@ -12,27 +12,34 @@ class ChatController extends GetxController {
 
   final AuthService _authService = Get.find();
 
-  late TextEditingController textController;
+  late FocusNode messageFocusNode;
+  late TextEditingController messageController;
   late ScrollController scrollController;
 
+  final Rx<bool> _loading = Rx<bool>(false);
   RxList<MessageModel> subscribers = RxList([]);
+
+  bool get loading => _loading.value;
 
   @override
   onInit() {
     subscribers.bindStream(_subscribeChatMessages());
-    textController = TextEditingController();
+    messageFocusNode = FocusNode();
+    messageController = TextEditingController();
     scrollController = ScrollController();
-
     super.onInit();
   }
 
   @override
   onClose() {
-    textController.dispose();
+    messageFocusNode.dispose();
+    messageController.dispose();
+    scrollController.dispose();
     super.onClose();
   }
 
   Stream<List<MessageModel>> _subscribeChatMessages() {
+    _loading.value = true;
     UserModel? user = _authService.user;
     if (user == null) {
       return const Stream.empty();
@@ -45,21 +52,23 @@ class ChatController extends GetxController {
         .stream(primaryKey: ['id'])
         .eq('box_id', boxId)
         .order('created_at')
-        .map((maps) => maps.map((map) {
-              map['is_mine'] = userId == map['user_id'];
-              print(map);
-              return MessageModel.fromJson(map);
-            }).toList());
+        .map((maps) {
+          _loading.value = false; // 데이터 도착 시 loading 값을 false로 변경
+          return maps.map((map) {
+            map['is_mine'] = userId == map['user_id'];
+            return MessageModel.fromJson(map);
+          }).toList();
+        });
   }
 
   void onSubmitMessage() async {
-    String text = textController.text;
+    String text = messageController.text;
     if (text.isEmpty) {
       return;
     }
 
-    textController.clear();
-
+    messageController.clear();
+    messageFocusNode.requestFocus();
     try {
       UserModel user = _authService.user!;
       String userId = user.id;
@@ -70,12 +79,11 @@ class ChatController extends GetxController {
           .from(Constants.messageTable)
           .insert(data.toJson())
           .then((value) {
-        scrollController.animateTo(
-          scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
+        scrollController.jumpTo(
+          0.0,
         );
       });
+      // 포커스를 텍스트 필드로 다시 설정
     } on PostgrestException catch (error) {
       // 포스트그레스 에러
     } catch (_) {

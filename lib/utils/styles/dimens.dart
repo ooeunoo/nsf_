@@ -8,6 +8,7 @@ class AppDimens {
   static double screenH = 812;
 
   // width
+  static double zero = 0.w;
   static double size1 = 1.w;
   static double size2 = 2.w;
   static double size4 = 4.w;

@@ -20,22 +20,19 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: AppDimens.size10),
+      padding: EdgeInsets.only(
+        top: AppDimens.size20,
+      ),
       child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-
-          // mainAxisAlignment:
-          //     message.isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment:
+              message.isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-
-              // width: message.isMine
-              //     ? MediaQuery.of(context).size.width * 0.7
-              //     : MediaQuery.of(context).size.width * 0.9,
-              child: _otherBubble(context),
-              // child:
-              //     message.isMine! ? _myBubble(context) : _otherBubble(context),
+              width: message.isMine
+                  ? MediaQuery.of(context).size.width * 0.7
+                  : MediaQuery.of(context).size.width * 0.9,
+              child:
+                  message.isMine ? _myBubble(context) : _otherBubble(context),
             ),
           ]),
     );
@@ -65,7 +62,9 @@ class MessageBubble extends StatelessWidget {
         Container(
           width: double.infinity, // 수정된 부분: Container의 width를 확장
           padding: EdgeInsets.symmetric(
-              vertical: AppDimens.size8, horizontal: AppDimens.size12),
+            vertical: AppDimens.size8,
+            horizontal: AppDimens.size12,
+          ),
           decoration: BoxDecoration(
             color: AppColor.brand600,
             borderRadius: BorderRadius.only(
