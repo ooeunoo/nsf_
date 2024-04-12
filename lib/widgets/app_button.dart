@@ -39,7 +39,11 @@ class AppButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppDimens.size8),
       ),
       child: TextButton(
-        onPressed: onPressed,
+        onPressed: () {
+          if (!disable) {
+            onPressed();
+          }
+        },
         style: ButtonStyle(
             backgroundColor: color != null
                 ? MaterialStateProperty.all(color)

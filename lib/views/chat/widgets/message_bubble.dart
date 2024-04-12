@@ -30,7 +30,7 @@ class MessageBubble extends StatelessWidget {
             SizedBox(
               width: message.isMine
                   ? MediaQuery.of(context).size.width * 0.7
-                  : MediaQuery.of(context).size.width * 0.9,
+                  : MediaQuery.of(context).size.width * 0.8,
               child:
                   message.isMine ? _myBubble(context) : _otherBubble(context),
             ),
@@ -105,7 +105,7 @@ class MessageBubble extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    AppText("한명욱",
+                    AppText('안녕',
                         style: Theme.of(context).textTheme.textSM.copyWith(
                             color: AppColor.gray700,
                             fontWeight: AppFontWeight.medium)),
