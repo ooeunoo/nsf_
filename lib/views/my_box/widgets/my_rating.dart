@@ -18,12 +18,12 @@ import 'package:nsf/widgets/app_svg.dart';
 import 'package:nsf/widgets/app_text.dart';
 
 class MyRating extends StatelessWidget {
-  MyRating({super.key});
-
-  final WodController _controller = Get.find();
+  const MyRating({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final WodController controller = Get.find();
+
     return Container(
         padding: EdgeInsets.symmetric(
             horizontal: AppDimens.size20, vertical: AppDimens.size12v),
@@ -39,20 +39,20 @@ class MyRating extends StatelessWidget {
           children: [
             Row(
               children: [
-                AppAvatar(imageUrl: mockAvatarUrl),
+                AppAvatar(imageUrl: mockAvatarUrl, size: AppDimens.size40),
                 const AppSpacerH(),
                 Obx(() => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        rank(context, _controller),
-                        log(context, _controller)
+                        rank(context, controller),
+                        log(context, controller)
                       ],
                     ))
               ],
             ),
             Obx(() => AppButton(Message.add_log,
-                    disable: _controller.wodState != WodState.noCompleted,
+                    disable: controller.wodState != WodState.noCompleted,
                     onPressed: () {
                   notifyRegisterWod();
                 }))
@@ -63,10 +63,10 @@ class MyRating extends StatelessWidget {
   Widget rank(BuildContext context, WodController controller) {
     String rank = Message.no_rank;
 
-    bool isCompleted = _controller.wodState == WodState.completed;
+    bool isCompleted = controller.wodState == WodState.completed;
 
     if (isCompleted) {
-      rank = '${(_controller.myWodRanking! + 1).toString()} 등';
+      rank = '${(controller.myWodRanking! + 1).toString()} 등';
     }
 
     return AppText(rank,
@@ -77,17 +77,20 @@ class MyRating extends StatelessWidget {
   }
 
   Widget log(BuildContext context, WodController controller) {
-    bool isCompleted = _controller.wodState == WodState.completed;
-    int? timeLimit = isCompleted ? _controller.myWod!.timeLimit! : null;
+    bool isCompleted = controller.wodState == WodState.completed;
+    int? timeLimit = isCompleted ? controller.myWod!.timeLimit! : null;
     int? completionTime =
-        isCompleted ? _controller.myWod!.completionTime! : null;
-    int? completionLbs = isCompleted ? _controller.myWod!.completionLbs! : null;
-    bool? isSuccess = isCompleted ? timeLimit! >= completionTime! : null;
+        isCompleted ? controller.myWod!.completionTime! : null;
+    int? completionLbs = isCompleted ? controller.myWod!.completionLbs! : null;
+    bool? isSuccess = isCompleted && timeLimit != null && completionTime != null
+        ? timeLimit >= completionTime
+        : null;
 
     return CompletionScore(
-        isCompleted: isCompleted,
-        isSuccess: isSuccess,
-        completionTime: completionTime,
-        completionLbs: completionLbs);
+      isCompleted: isCompleted,
+      isSuccess: isSuccess,
+      completionTime: completionTime,
+      completionLbs: completionLbs,
+    );
   }
 }

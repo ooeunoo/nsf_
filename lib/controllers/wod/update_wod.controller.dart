@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:nsf/models/wod/update_wod_model.dart';
+import 'package:nsf/utils/constants.dart';
 import 'package:nsf/utils/time.dart';
+import 'package:nsf/widgets/app.snak_bar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 enum Operations {
@@ -37,9 +39,8 @@ class UpdateWodController extends GetxController {
   }
 
   // 완료
-  void onConfirm() {
-    _updateWod();
-    _closeBottomSheet();
+  Future<void> onConfirm() async {
+    await _updateWod();
   }
 
   void onInitWodId(int id) {
@@ -89,18 +90,20 @@ class UpdateWodController extends GetxController {
 
     onConfirm();
   }
+
   //////////////
   /// Private Functional
   //////////////
-
-  void _updateWod() async {
-    // 업데이트
+  Future<void> _updateWod() async {
     _data.value = _data.value.copyWith(completion: true);
-
     await _client
-        .from('wods')
+        .from(Constants.wodTable)
         .update(data.toJson())
-        .eq('id', data.id.toString());
+        .eq('id', data.id.toString())
+        .whenComplete(() {
+      _closeBottomSheet();
+      notifyUpdatedWod();
+    });
   }
 
   void _closeBottomSheet() {

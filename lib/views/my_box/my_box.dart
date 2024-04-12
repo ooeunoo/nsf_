@@ -7,7 +7,7 @@ import 'package:nsf/utils/styles/color.dart';
 import 'package:nsf/utils/styles/dimens.dart';
 import 'package:nsf/utils/styles/font.dart';
 import 'package:nsf/utils/styles/theme.dart';
-import 'package:nsf/views/my_box/widgets/chatting.dart';
+import 'package:nsf/views/my_box/widgets/chat_preview.dart';
 import 'package:nsf/views/my_box/widgets/my_rating.dart';
 import 'package:nsf/views/my_box/widgets/today_rating.dart';
 import 'package:nsf/widgets/app_button.dart';
@@ -45,22 +45,24 @@ class MyBoxView extends StatelessWidget {
             const AppSpacerH(),
           ],
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: AppDimens.size10, vertical: AppDimens.size10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              MyRating(),
-              AppSpacerV(
-                value: AppDimens.size10,
-              ),
-              TodayRating(),
-              AppSpacerV(
-                value: AppDimens.size10,
-              ),
-              const Chatting()
-            ],
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: AppDimens.size10, vertical: AppDimens.size10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const MyRating(),
+                AppSpacerV(
+                  value: AppDimens.size10,
+                ),
+                const TodayRating(),
+                AppSpacerV(
+                  value: AppDimens.size10,
+                ),
+                const ChatPreview(),
+              ],
+            ),
           ),
         ),
       ),

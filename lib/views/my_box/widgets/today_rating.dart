@@ -1,4 +1,8 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:nsf/controllers/wod/wod.controller.dart';
 import 'package:nsf/mocks/image.dart';
@@ -9,6 +13,7 @@ import 'package:nsf/utils/styles/color.dart';
 import 'package:nsf/utils/styles/dimens.dart';
 import 'package:nsf/utils/styles/font.dart';
 import 'package:nsf/utils/styles/theme.dart';
+import 'package:nsf/views/my_box/widgets/completion_score.dart';
 import 'package:nsf/widgets/app.snak_bar.dart';
 import 'package:nsf/widgets/app_avatar.dart';
 import 'package:nsf/widgets/app_button.dart';
@@ -18,25 +23,26 @@ import 'package:nsf/widgets/app_svg.dart';
 import 'package:nsf/widgets/app_text.dart';
 
 class TodayRating extends StatelessWidget {
-  TodayRating({super.key});
-
-  final WodController _controller = Get.find();
+  const TodayRating({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final WodController controller = Get.find();
+
     return Container(
-        padding: EdgeInsets.symmetric(
-            horizontal: AppDimens.size20, vertical: AppDimens.size12v),
-        decoration: BoxDecoration(
-          color: AppColor.white,
-          borderRadius: BorderRadius.all(Radius.circular(AppDimens.size20)),
-          border: Border(
-            top: BorderSide(color: AppColor.gray200, width: AppDimens.size1),
-          ),
+      padding: EdgeInsets.symmetric(
+          horizontal: AppDimens.size20, vertical: AppDimens.size12v),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.all(Radius.circular(AppDimens.size20)),
+        border: Border(
+          top: BorderSide(color: AppColor.gray200, width: AppDimens.size1),
         ),
-        child: Obx(() => Column(
-              children: [header(context, _controller), _body(context)],
-            )));
+      ),
+      child: Column(
+        children: [header(context, controller), _body(context, controller)],
+      ),
+    );
   }
 
   Widget header(BuildContext context, WodController controller) {
@@ -48,46 +54,50 @@ class TodayRating extends StatelessWidget {
                 .textTheme
                 .textXL
                 .copyWith(fontWeight: AppFontWeight.bold)),
-        Row(
-          children: [
-            if (controller.wodState != WodState.noRegistered) ...{
-              AppChip(
-                text: controller.myWod!.getWodTypeTime,
-                color: AppColor.gray50,
-                borderColor: AppColor.gray200,
-                textStyle: Theme.of(context).textTheme.textSM.copyWith(
-                    color: AppColor.gray700, fontWeight: AppFontWeight.medium),
-              )
-            },
-            AppSvg(Assets.chevron_right)
-          ],
-        )
+        Obx(() => Row(
+              children: [
+                if (controller.wodState != WodState.noRegistered) ...{
+                  AppChip(
+                    text: controller.myWod!.getPurposeInformation,
+                    color: AppColor.gray50,
+                    borderColor: AppColor.gray200,
+                    textStyle: Theme.of(context).textTheme.textSM.copyWith(
+                        color: AppColor.gray700,
+                        fontWeight: AppFontWeight.medium),
+                  )
+                },
+                AppSvg(Assets.chevron_right)
+              ],
+            ))
       ],
     );
   }
 
-  Widget _body(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: AppDimens.size20v),
-      child: SizedBox(
-        height: AppDimens.size100v,
-        child: Center(
-          child: Obx(() {
-            switch (_controller.wodState) {
-              case WodState.noRegistered:
-                return _notRegisterWodModal(context);
-              case WodState.noCompleted:
-                return _notCompletedWod(context);
-              case WodState.completed:
-                return _completedWod(context);
-            }
-          }),
+  Widget _body(BuildContext context, WodController controller) {
+    return SizedBox(
+      height: AppDimens.size180v,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: AppDimens.size20v),
+        child: SizedBox(
+          height: AppDimens.size100v,
+          child: Center(
+            child: Obx(() {
+              switch (controller.wodState) {
+                case WodState.noRegistered:
+                  return _notRegisterWodModal(context, controller);
+                case WodState.noCompleted:
+                  return _notCompletedWod(context, controller);
+                case WodState.completed:
+                  return _completedWod(context, controller);
+              }
+            }),
+          ),
         ),
       ),
     );
   }
 
-  Widget _notRegisterWodModal(BuildContext context) {
+  Widget _notRegisterWodModal(BuildContext context, WodController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -105,13 +115,14 @@ class TodayRating extends StatelessWidget {
                 ),
             color: AppColor.white,
             borderColor: AppColor.gray300,
-            onPressed: _controller.onOpenRegisterWodModal)
+            onPressed: controller.onOpenRegisterWodModal)
       ],
     );
   }
 
-  Widget _notCompletedWod(BuildContext context) {
+  Widget _notCompletedWod(BuildContext context, WodController controller) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -126,24 +137,77 @@ class TodayRating extends StatelessWidget {
                 ),
             color: AppColor.white,
             borderColor: AppColor.gray300,
-            onPressed: _controller.onOpenUpdateWodModal)
+            onPressed: controller.onOpenUpdateWodModal)
       ],
     );
   }
 
-  Widget _completedWod(BuildContext context) {
+  Widget _completedWod(BuildContext context, WodController controller) {
+    bool hasFirst = controller.top3Wods!.isNotEmpty;
+    bool hasSecond = controller.top3Wods!.length >= 2;
+    bool hasThrid = controller.top3Wods!.length >= 3;
+
     return Column(
-      children: [_rankPoster(context, _controller.top3Wods![0])],
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Expanded(
+                child: _rankPoster(
+                    context, hasSecond ? controller.top3Wods![1] : null, 2)),
+            Expanded(
+                child: _rankPoster(
+                    context, hasFirst ? controller.top3Wods![0] : null, 1)),
+            Expanded(
+                child: _rankPoster(
+                    context, hasThrid ? controller.top3Wods![2] : null, 3)),
+          ],
+        ),
+      ],
     );
   }
 
-  Widget _rankPoster(BuildContext context, WodModel? wod) {
+  Widget _rankPoster(BuildContext context, WodModel? wod, int rank) {
+    final _avatarImage = wod == null ? null : mockAvatarUrl;
+    final _avatarSize = rank == 1 ? AppDimens.size64 : AppDimens.size56;
+    final _rank = wod == null ? null : rank;
+    final _rankColor = rank == 1
+        ? AppColor.yellow400
+        : rank == 2
+            ? AppColor.gray400
+            : AppColor.orange500;
+    final _nickname = wod == null ? '-' : wod.user.nickname ?? wod.user.name;
+    final _isCompleted = wod == null ? false : wod.completion;
+    final _isSuccess =
+        wod == null ? null : wod.timeLimit! >= wod.completionTime!;
+
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        AppAvatar(imageUrl: mockAvatarUrl),
-        AppText('유윤상',
+        AppAvatar(
+            imageUrl: _avatarImage,
+            size: _avatarSize,
+            rank: _rank,
+            rankColor: _rankColor),
+        AppSpacerV(value: AppDimens.size10),
+        AppText(_nickname,
             style: Theme.of(context).textTheme.textMD.copyWith(
-                color: AppColor.gray900, fontWeight: AppFontWeight.semibold))
+                color: AppColor.gray900, fontWeight: AppFontWeight.semibold)),
+        AppSpacerV(value: AppDimens.size4),
+        CompletionScore(
+          isCompleted: _isCompleted,
+          isSuccess: _isSuccess,
+          completionTime: wod?.completionTime,
+          completionLbs: wod?.completionLbs,
+          textStyle: Theme.of(context).textTheme.textXS.copyWith(
+              fontWeight: AppFontWeight.medium, color: AppColor.gray600),
+        ),
+        AppSpacerV(value: AppDimens.size4),
+        AppText(_nickname,
+            style: Theme.of(context).textTheme.textMD.copyWith(
+                color: AppColor.gray900, fontWeight: AppFontWeight.semibold)),
       ],
     );
   }

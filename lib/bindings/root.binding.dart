@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:nsf/controllers/box/box.controller.dart';
+import 'package:nsf/controllers/chat/chat.controller.dart';
 import 'package:nsf/controllers/root/root.controller.dart';
 import 'package:nsf/controllers/wod/register_wod.controller.dart';
 import 'package:nsf/controllers/wod/update_wod.controller.dart';
@@ -13,5 +14,6 @@ class RootBinding implements Bindings {
     Get.lazyPut<WodController>(() => WodController());
     Get.lazyPut<CreateWodController>(() => CreateWodController(), fenix: true);
     Get.lazyPut<UpdateWodController>(() => UpdateWodController(), fenix: true);
+    Get.lazyPut<ChatController>(() => ChatController(), fenix: true);
   }
 }

@@ -5,6 +5,7 @@ import 'package:nsf/models/user/user_model.dart';
 import 'package:nsf/models/wod/create_wod_model.dart';
 import 'package:nsf/models/wod/wod_model.dart';
 import 'package:nsf/services/auth_service.dart';
+import 'package:nsf/utils/constants.dart';
 import 'package:nsf/utils/time.dart';
 import 'package:nsf/widgets/app.snak_bar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -67,16 +68,21 @@ class CreateWodController extends GetxController {
   }
 
   // 완료
-  void onConfirm() {
-    _createWod();
-    _closeBottomSheet();
+  Future<void> onConfirm() async {
+    await _createWod();
   }
 
   //////////////
   /// Private Functional
   //////////////
-  void _createWod() async {
-    final response = await _client.from('wods').insert(data.toJson());
+  Future<void> _createWod() async {
+    await _client
+        .from(Constants.wodTable)
+        .insert(data.toJson())
+        .whenComplete(() {
+      _closeBottomSheet();
+      notifyRegisterWod();
+    });
   }
 
   // Form Data 초기화

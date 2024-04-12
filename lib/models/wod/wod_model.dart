@@ -5,6 +5,8 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:nsf/models/box/box_model.dart';
+import 'package:nsf/models/user/user_model.dart';
 import 'dart:convert';
 
 import 'package:nsf/utils/time.dart';
@@ -28,8 +30,8 @@ class WodModel with _$WodModel {
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory WodModel({
     required int id,
-    required String userId,
-    required int boxId,
+    required UserModel user,
+    required BoxModel box,
     required DateTime date,
     required WodType type,
     @Default(0) int? timeLimit,
@@ -41,7 +43,7 @@ class WodModel with _$WodModel {
   factory WodModel.fromJson(Map<String, dynamic> json) =>
       _$WodModelFromJson(json);
 
-  String get getWodTypeTime => switch (type) {
+  String get getPurposeInformation => switch (type) {
         WodType.ForTime => timeLimit == null
             ? type.name
             : '${type.name} • ${secondToMinute(timeLimit!)}분 이내',

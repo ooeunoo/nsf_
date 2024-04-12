@@ -18,6 +18,7 @@ class CompletionScore extends StatelessWidget {
   final bool? isSuccess;
   final int? completionTime;
   final int? completionLbs;
+  final TextStyle? textStyle;
 
   const CompletionScore({
     super.key,
@@ -25,26 +26,31 @@ class CompletionScore extends StatelessWidget {
     required this.isSuccess,
     required this.completionTime,
     required this.completionLbs,
+    this.textStyle,
   });
 
   @override
   Widget build(BuildContext context) {
     if (isCompleted) {
       return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           AppSvg(isSuccess! ? Assets.success : Assets.failure,
               size: AppDimens.size16),
           AppSpacerH(value: AppDimens.size4),
           AppText(
               '${secondToMinuteSecond(completionTime!)} • $completionLbs lbs',
-              style: Theme.of(context).textTheme.textSM.copyWith(
-                  fontWeight: AppFontWeight.medium, color: AppColor.gray600)),
+              style: textStyle ??
+                  Theme.of(context).textTheme.textSM.copyWith(
+                      fontWeight: AppFontWeight.medium,
+                      color: AppColor.gray600)),
         ],
       );
     } else {
       return AppText(Message.no_log,
-          style: Theme.of(context).textTheme.textSM.copyWith(
-              fontWeight: AppFontWeight.medium, color: AppColor.gray600));
+          style: textStyle ??
+              Theme.of(context).textTheme.textSM.copyWith(
+                  fontWeight: AppFontWeight.medium, color: AppColor.gray600));
     }
   }
 }

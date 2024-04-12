@@ -41,7 +41,11 @@ class AuthService extends GetxService {
   }
 
   Future<UserModel> _getCurrentUser(String id) async {
-    final data = await _client.from('users').select('*').eq('id', id).single();
+    final data = await _client
+        .from(Constants.userTable)
+        .select('*')
+        .eq('id', id)
+        .single();
 
     return UserModel.fromJson(data);
   }
