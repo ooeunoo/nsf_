@@ -47,6 +47,7 @@ class ChatController extends GetxController {
         .order('created_at')
         .map((maps) => maps.map((map) {
               map['is_mine'] = userId == map['user_id'];
+              print(map);
               return MessageModel.fromJson(map);
             }).toList());
   }

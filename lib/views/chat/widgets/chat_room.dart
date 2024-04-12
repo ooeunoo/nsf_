@@ -1,3 +1,6 @@
+// Created with [AIPRM Prompt "Flutter Engineer"](https://www.aiprm.com/prompts/softwareengineering/backend-development/1807397674459332608/)
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -13,54 +16,64 @@ class ChatRoom extends StatelessWidget {
   final bool onlyMessage;
   final double? horizontalPadding;
 
-  const ChatRoom(
-      {super.key,
-      this.onlyMessage = false,
-      this.reverse = true,
-      this.horizontalPadding});
+  const ChatRoom({
+    super.key,
+    this.onlyMessage = false,
+    this.reverse = true,
+    this.horizontalPadding,
+  });
 
   @override
   Widget build(BuildContext context) {
+    // Get the instance of ChatController using Get.find() method
     ChatController controller = Get.find<ChatController>();
 
-    return SingleChildScrollView(
-      child: Obx(() => Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                child: controller.subscribers.isEmpty
-                    ? Center(
-                        child: AppText('대화를 시작해보세요 :)',
-                            style: Theme.of(context)
-                                .textTheme
-                                .textXL
-                                .copyWith(color: AppColor.gray600)),
-                      )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        reverse: reverse,
-                        itemCount: controller.subscribers.length,
-                        itemBuilder: (context, index) {
-                          final message = controller.subscribers[index];
-
-                          // _loadProfileCache(message.profileId);
-
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: horizontalPadding ?? 0),
-                            child: MessageBubble(
-                              message: message,
-                            ),
-                          );
-                        },
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // SingleChildScrollView to allow scrolling if needed
+        Flexible(
+          child: Obx(() => SingleChildScrollView(
+                reverse: true,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Display a message if there are no subscribers
+                    if (controller.subscribers.isEmpty)
+                      Center(
+                        child: AppText(
+                          '대화를 시작해보세요 :)',
+                          style: Theme.of(context)
+                              .textTheme
+                              .textXL
+                              .copyWith(color: AppColor.gray600),
+                        ),
                       ),
-              ),
-              if (!onlyMessage) ...{
-                const MessageBar(),
-              }
-            ],
-          )),
+                    // ListView.builder to display messages
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      reverse: reverse,
+                      itemCount: controller.subscribers.length,
+                      itemBuilder: (context, index) {
+                        final message = controller.subscribers[index];
+
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: horizontalPadding ?? 0),
+                          child: MessageBubble(
+                            message: message,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              )),
+        ),
+        // Display MessageBar at the bottom
+        if (!onlyMessage) const MessageBar(),
+      ],
     );
   }
 }
