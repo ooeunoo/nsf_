@@ -35,44 +35,48 @@ class ChatRoom extends StatelessWidget {
 
       return Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Flexible(
+          Expanded(
             child: Obx(() => GestureDetector(
                   onTap: () => controller.messageFocusNode.unfocus(),
-                  child: SingleChildScrollView(
-                    controller: controller.scrollController,
-                    reverse: true,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (controller.subscribers.isEmpty)
-                          Center(
-                            child: AppText(
-                              '대화를 시작해보세요 :)',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .textXL
-                                  .copyWith(color: AppColor.gray600),
-                            ),
-                          ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const ClampingScrollPhysics(),
-                          reverse: reverse,
-                          itemCount: controller.subscribers.length,
-                          itemBuilder: (context, index) {
-                            final message = controller.subscribers[index];
-
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: horizontalPadding ?? 0),
-                              child: MessageBubble(
-                                message: message,
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: SingleChildScrollView(
+                      controller: controller.scrollController,
+                      reverse: reverse,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (controller.subscribers.isEmpty)
+                            Center(
+                              child: AppText(
+                                '대화를 시작해보세요 :)',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .textXL
+                                    .copyWith(color: AppColor.gray600),
                               ),
-                            );
-                          },
-                        ),
-                      ],
+                            ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const ClampingScrollPhysics(),
+                            reverse: reverse,
+                            itemCount: controller.subscribers.length,
+                            itemBuilder: (context, index) {
+                              final message = controller.subscribers[index];
+
+                              return Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: horizontalPadding ?? 0),
+                                child: MessageBubble(
+                                  message: message,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 )),

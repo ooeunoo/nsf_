@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nsf/services/auth_service.dart';
+import 'package:nsf/utils/styles/dimens.dart';
+import 'package:nsf/widgets/app_avatar.dart';
 import 'package:nsf/widgets/app_button.dart';
 
 class ProfileView extends StatelessWidget {
@@ -14,7 +16,14 @@ class ProfileView extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [AppButton('로그아웃', onPressed: () => _authService.logout())],
+          children: [
+            Obx(() => AppAvatar(
+                  imageUrl: _authService.user?.imageUrl,
+                  size: AppDimens.size60,
+                  upload: true,
+                )),
+            AppButton('로그아웃', onPressed: () => _authService.logout())
+          ],
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:nsf/utils/styles/color.dart';
 import 'package:nsf/utils/styles/dimens.dart';
 import 'package:nsf/utils/styles/font.dart';
 import 'package:nsf/utils/styles/theme.dart';
+import 'package:nsf/utils/time.dart';
 import 'package:nsf/widgets/app_avatar.dart';
 import 'package:nsf/widgets/app_spacer_h.dart';
 import 'package:nsf/widgets/app_spacer_v.dart';
@@ -19,9 +20,7 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        top: AppDimens.size20,
-      ),
+      padding: EdgeInsets.only(top: AppDimens.size10, bottom: AppDimens.size10),
       child: Row(
         mainAxisAlignment:
             message.isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -66,7 +65,7 @@ class MessageBubble extends StatelessWidget {
                       ),
                       AppSpacerH(value: AppDimens.size4),
                       AppText(
-                        format(message.createdAt),
+                        formatCreatedAt(message.createdAt),
                         style: Theme.of(context).textTheme.textXS.copyWith(
                               color: AppColor.gray600,
                               fontWeight: AppFontWeight.regular,
@@ -117,7 +116,7 @@ class MessageBubble extends StatelessWidget {
         children: [
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.1,
-            child: const AppAvatar(),
+            child: AppAvatar(),
           ),
           AppSpacerH(value: AppDimens.size10),
           Expanded(
@@ -131,7 +130,7 @@ class MessageBubble extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AppText(
-                        '안녕',
+                        '유윤상',
                         style: Theme.of(context).textTheme.textSM.copyWith(
                               color: AppColor.gray700,
                               fontWeight: AppFontWeight.medium,

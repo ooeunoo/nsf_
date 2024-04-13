@@ -17,22 +17,51 @@ enum WodState {
 
 class WodController extends GetxController {
   final AuthService _authService = Get.find();
-
   final _client = Supabase.instance.client;
 
+  final RxList<WodModel> _totalWods = RxList([]);
+  final RxList<WodModel> _prevTop3Wods = RxList([]);
+  final RxList<WodModel> _curTop3Wods = RxList([]);
   final Rxn<WodModel> _myWod = Rxn<WodModel>();
+  final Rx<WodState> _myWodState = Rx<WodState>(WodState.noRegistered);
   final Rxn<int> _myWodRanking = Rxn<int>(null);
-  final Rxn<List<WodModel>> _top3Wods = Rxn<List<WodModel>>();
 
-  WodState get wodState => _refreshWodState();
+  List<WodModel> get totalWods => _totalWods;
+  List<WodModel>? get prevTop3Wods => _prevTop3Wods;
+  List<WodModel>? get curTop3Wods => _curTop3Wods;
   WodModel? get myWod => _myWod.value;
+  WodState get wodState => _myWodState.value;
   int? get myWodRanking => _myWodRanking.value;
-  List<WodModel>? get top3Wods => _top3Wods.value;
 
   @override
   void onInit() async {
+    _listenWods();
+
     super.onInit();
-    await _checkWods();
+  }
+
+  void _listenWods() {
+    UserModel? user = _authService.user;
+    if (user == null) return;
+    String userId = user.id;
+    int boxId = user.boxId!;
+    setupWods(userId, boxId);
+
+    _client
+        .channel('${Constants.wodTable}:box_id=eq.$boxId')
+        .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: Constants.wodTable,
+            filter: PostgresChangeFilter(
+              type: PostgresChangeFilterType.eq,
+              column: 'date',
+              value: getTodayDateTime(),
+            ),
+            callback: (payload) async {
+              setupWods(userId, boxId);
+            })
+        .subscribe();
   }
 
   void onOpenRegisterWodModal() {
@@ -41,10 +70,7 @@ class WodController extends GetxController {
             isScrollControlled: true,
             enableDrag: false,
             useRootNavigator: true)
-        .whenComplete(() async {
-      await _checkWods();
-      _refreshWodState();
-    });
+        .whenComplete(() async {});
   }
 
   void onOpenUpdateWodModal() {
@@ -55,51 +81,15 @@ class WodController extends GetxController {
             useRootNavigator: true)
         .whenComplete(() async {
       notifyUpdatedWod();
-      await _checkWods();
-      _refreshWodState();
     });
   }
 
-  // 와드 상태를 업데이트
-  WodState _refreshWodState() {
-    if (myWod == null) {
-      return WodState.noRegistered;
-    }
-    bool completed = myWod!.completion;
+  setupWods(String userId, int boxId) async {
+    List<WodModel> wods = await _getWodsInBox(boxId);
 
-    if (!completed) {
-      return WodState.noCompleted;
-    } else {
-      return WodState.completed;
-    }
-  }
-
-  _checkWods() async {
-    UserModel? user = _authService.user;
-    if (user?.boxId != null) {
-      String userId = user!.id;
-      int boxId = user.boxId!;
-      List<WodModel> wods = await _getWodsInBox(boxId);
-
-      // 와드가 비어있지 않다면
-      if (wods.isNotEmpty) {
-        int myWodIndex = wods.indexWhere((item) => item.user.id == userId);
-        _myWod.value = myWodIndex == -1 ? null : wods[myWodIndex];
-        _myWodRanking.value = myWodIndex == -1 ? null : myWodIndex;
-
-        // 와드의 갯수가 3개 이상이라면
-        if (wods.length > 3) {
-          _top3Wods.value = wods.sublist(0, 2);
-        } else {
-          // 3개 미만이라면
-          _top3Wods.value = wods;
-        }
-      }
-    } else {
-      _myWod.value = null;
-      _myWodRanking.value = null;
-      _top3Wods.value = null;
-    }
+    _totalWods.value = wods;
+    _checkMyWod(wods, userId);
+    _checkTop3Wod(wods);
   }
 
   Future<List<WodModel>> _getWodsInBox(int boxId) async {
@@ -108,9 +98,26 @@ class WodController extends GetxController {
         .select('*, user(*), box(*)')
         .eq('box_id', boxId)
         .eq('date', getTodayDateTime())
+        // 순위 지정 조건 정의
         .order('completion_time', ascending: true)
         .order('completion_lbs', ascending: true);
 
     return data.map((d) => WodModel.fromJson(d)).toList();
+  }
+
+  void _checkMyWod(List<WodModel> wods, String userId) {
+    wods.asMap().forEach((index, wod) {
+      if (wod.userId != userId) return;
+      bool completion = wod.completion;
+      _myWod.value = wod;
+      _myWodRanking.value = completion ? index : null;
+      _myWodState.value =
+          completion ? WodState.completed : WodState.noCompleted;
+    });
+  }
+
+  void _checkTop3Wod(List<WodModel> wods) {
+    _prevTop3Wods.value = _curTop3Wods;
+    _curTop3Wods.value = wods.where((wod) => wod.completion).take(3).toList();
   }
 }

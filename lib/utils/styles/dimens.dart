@@ -56,4 +56,6 @@ class AppDimens {
   static double size160v = 160.h;
   static double size170v = 170.h;
   static double size180v = 180.h;
+  static double size200v = 200.h;
+  static double size500v = 500.h;
 }

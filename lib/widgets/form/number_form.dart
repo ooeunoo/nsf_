@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nsf/models/forms/form_short_cut_model.dart';
 import 'package:nsf/utils/styles/color.dart';
 import 'package:nsf/utils/styles/dimens.dart';
@@ -17,7 +18,7 @@ class NumberForm extends StatelessWidget {
   final String? suffixText;
   final List<FormShortCutModel>? shortcuts;
   final VoidCallback? onConfirm;
-  final TextEditingController? controller;
+  final TextEditingController controller;
   final ValueChanged<String>? onChanged;
 
   const NumberForm(
@@ -27,7 +28,7 @@ class NumberForm extends StatelessWidget {
       this.chipTitle,
       this.shortcuts,
       this.onConfirm,
-      this.controller,
+      required this.controller,
       this.onChanged,
       this.suffixText});
 
@@ -90,11 +91,12 @@ class NumberForm extends StatelessWidget {
         },
         //
         if (onConfirm != null) ...{
-          AppButton(
-            '완료',
-            onPressed: onConfirm!,
-            width: double.maxFinite,
-          )
+          Obx(() => AppButton(
+                '완료',
+                onPressed: onConfirm!,
+                disable: controller.text.isEmpty,
+                width: double.maxFinite,
+              ))
         }
       ],
     );

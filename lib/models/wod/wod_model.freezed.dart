@@ -21,8 +21,8 @@ WodModel _$WodModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$WodModel {
   int get id => throw _privateConstructorUsedError;
-  UserModel get user => throw _privateConstructorUsedError;
-  BoxModel get box => throw _privateConstructorUsedError;
+  String get userId => throw _privateConstructorUsedError;
+  int get boxId => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
   WodType get type => throw _privateConstructorUsedError;
   int? get timeLimit => throw _privateConstructorUsedError;
@@ -43,17 +43,14 @@ abstract class $WodModelCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
-      UserModel user,
-      BoxModel box,
+      String userId,
+      int boxId,
       DateTime date,
       WodType type,
       int? timeLimit,
       bool completion,
       int? completionTime,
       int? completionLbs});
-
-  $UserModelCopyWith<$Res> get user;
-  $BoxModelCopyWith<$Res> get box;
 }
 
 /// @nodoc
@@ -70,8 +67,8 @@ class _$WodModelCopyWithImpl<$Res, $Val extends WodModel>
   @override
   $Res call({
     Object? id = null,
-    Object? user = null,
-    Object? box = null,
+    Object? userId = null,
+    Object? boxId = null,
     Object? date = null,
     Object? type = null,
     Object? timeLimit = freezed,
@@ -84,14 +81,14 @@ class _$WodModelCopyWithImpl<$Res, $Val extends WodModel>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      user: null == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as UserModel,
-      box: null == box
-          ? _value.box
-          : box // ignore: cast_nullable_to_non_nullable
-              as BoxModel,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      boxId: null == boxId
+          ? _value.boxId
+          : boxId // ignore: cast_nullable_to_non_nullable
+              as int,
       date: null == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
@@ -118,22 +115,6 @@ class _$WodModelCopyWithImpl<$Res, $Val extends WodModel>
               as int?,
     ) as $Val);
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $UserModelCopyWith<$Res> get user {
-    return $UserModelCopyWith<$Res>(_value.user, (value) {
-      return _then(_value.copyWith(user: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $BoxModelCopyWith<$Res> get box {
-    return $BoxModelCopyWith<$Res>(_value.box, (value) {
-      return _then(_value.copyWith(box: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -146,19 +127,14 @@ abstract class _$$WodModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {int id,
-      UserModel user,
-      BoxModel box,
+      String userId,
+      int boxId,
       DateTime date,
       WodType type,
       int? timeLimit,
       bool completion,
       int? completionTime,
       int? completionLbs});
-
-  @override
-  $UserModelCopyWith<$Res> get user;
-  @override
-  $BoxModelCopyWith<$Res> get box;
 }
 
 /// @nodoc
@@ -173,8 +149,8 @@ class __$$WodModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? user = null,
-    Object? box = null,
+    Object? userId = null,
+    Object? boxId = null,
     Object? date = null,
     Object? type = null,
     Object? timeLimit = freezed,
@@ -187,14 +163,14 @@ class __$$WodModelImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      user: null == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as UserModel,
-      box: null == box
-          ? _value.box
-          : box // ignore: cast_nullable_to_non_nullable
-              as BoxModel,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      boxId: null == boxId
+          ? _value.boxId
+          : boxId // ignore: cast_nullable_to_non_nullable
+              as int,
       date: null == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
@@ -229,8 +205,8 @@ class __$$WodModelImplCopyWithImpl<$Res>
 class _$WodModelImpl extends _WodModel {
   const _$WodModelImpl(
       {required this.id,
-      required this.user,
-      required this.box,
+      required this.userId,
+      required this.boxId,
       required this.date,
       required this.type,
       this.timeLimit = 0,
@@ -245,9 +221,9 @@ class _$WodModelImpl extends _WodModel {
   @override
   final int id;
   @override
-  final UserModel user;
+  final String userId;
   @override
-  final BoxModel box;
+  final int boxId;
   @override
   final DateTime date;
   @override
@@ -267,7 +243,7 @@ class _$WodModelImpl extends _WodModel {
 
   @override
   String toString() {
-    return 'WodModel(id: $id, user: $user, box: $box, date: $date, type: $type, timeLimit: $timeLimit, completion: $completion, completionTime: $completionTime, completionLbs: $completionLbs)';
+    return 'WodModel(id: $id, userId: $userId, boxId: $boxId, date: $date, type: $type, timeLimit: $timeLimit, completion: $completion, completionTime: $completionTime, completionLbs: $completionLbs)';
   }
 
   @override
@@ -276,8 +252,8 @@ class _$WodModelImpl extends _WodModel {
         (other.runtimeType == runtimeType &&
             other is _$WodModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.user, user) || other.user == user) &&
-            (identical(other.box, box) || other.box == box) &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.boxId, boxId) || other.boxId == boxId) &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.timeLimit, timeLimit) ||
@@ -292,7 +268,7 @@ class _$WodModelImpl extends _WodModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, user, box, date, type,
+  int get hashCode => Object.hash(runtimeType, id, userId, boxId, date, type,
       timeLimit, completion, completionTime, completionLbs);
 
   @JsonKey(ignore: true)
@@ -312,8 +288,8 @@ class _$WodModelImpl extends _WodModel {
 abstract class _WodModel extends WodModel {
   const factory _WodModel(
       {required final int id,
-      required final UserModel user,
-      required final BoxModel box,
+      required final String userId,
+      required final int boxId,
       required final DateTime date,
       required final WodType type,
       final int? timeLimit,
@@ -328,9 +304,9 @@ abstract class _WodModel extends WodModel {
   @override
   int get id;
   @override
-  UserModel get user;
+  String get userId;
   @override
-  BoxModel get box;
+  int get boxId;
   @override
   DateTime get date;
   @override

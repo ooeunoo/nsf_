@@ -9,8 +9,8 @@ part of 'wod_model.dart';
 _$WodModelImpl _$$WodModelImplFromJson(Map<String, dynamic> json) =>
     _$WodModelImpl(
       id: json['id'] as int,
-      user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
-      box: BoxModel.fromJson(json['box'] as Map<String, dynamic>),
+      userId: json['user_id'] as String,
+      boxId: json['box_id'] as int,
       date: DateTime.parse(json['date'] as String),
       type: $enumDecode(_$WodTypeEnumMap, json['type']),
       timeLimit: json['time_limit'] as int? ?? 0,
@@ -22,8 +22,8 @@ _$WodModelImpl _$$WodModelImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$WodModelImplToJson(_$WodModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'user': instance.user,
-      'box': instance.box,
+      'user_id': instance.userId,
+      'box_id': instance.boxId,
       'date': instance.date.toIso8601String(),
       'type': _$WodTypeEnumMap[instance.type]!,
       'time_limit': instance.timeLimit,

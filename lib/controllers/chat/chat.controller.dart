@@ -32,6 +32,7 @@ class ChatController extends GetxController {
 
   @override
   onClose() {
+    subscribers.clear();
     messageFocusNode.dispose();
     messageController.dispose();
     scrollController.dispose();
@@ -53,7 +54,7 @@ class ChatController extends GetxController {
         .eq('box_id', boxId)
         .order('created_at')
         .map((maps) {
-          _loading.value = false; // 데이터 도착 시 loading 값을 false로 변경
+          _loading.value = false;
           return maps.map((map) {
             map['is_mine'] = userId == map['user_id'];
             return MessageModel.fromJson(map);

@@ -28,13 +28,16 @@ class ChatPreview extends StatelessWidget {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [header(context), body(context)],
         ));
   }
 
   Widget header(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed(Routes.chat,),
+      onTap: () => Get.toNamed(
+        Routes.chat,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -52,11 +55,14 @@ class ChatPreview extends StatelessWidget {
   }
 
   Widget body(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: AppDimens.size12),
-      child: const ChatRoom(
-        onlyMessage: true,
-        reverse: false,
+    return SizedBox(
+      height: AppDimens.size500v,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: AppDimens.size12),
+        child: const ChatRoom(
+          onlyMessage: true,
+          reverse: false,
+        ),
       ),
     );
   }

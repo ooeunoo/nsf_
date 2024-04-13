@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:nsf/models/user/user_model.dart';
 import 'package:nsf/routes/app_pages.dart';
 import 'package:nsf/utils/constants.dart';
@@ -13,7 +14,7 @@ class AuthService extends GetxService {
         _user.value = null;
         Get.offAllNamed(Routes.login);
       } else {
-        _user.value = await _getCurrentUser(event.id);
+        _refreshUser(event.id);
         Get.offAllNamed(Routes.root);
       }
     });
@@ -40,6 +41,10 @@ class AuthService extends GetxService {
     });
   }
 
+  _refreshUser(String id) async {
+    _user.value = await _getCurrentUser(id);
+  }
+
   Future<UserModel> _getCurrentUser(String id) async {
     final data = await _client
         .from(Constants.userTable)
@@ -48,5 +53,30 @@ class AuthService extends GetxService {
         .single();
 
     return UserModel.fromJson(data);
+  }
+
+  Future<void> uploadProfileImage(XFile image) async {
+    if (user == null) return;
+    final String userId = user!.id;
+
+    final imageExtension = image.path.split('.').last.toLowerCase();
+    final imageBytes = await image.readAsBytes();
+    final imagePath = '/$userId/profile';
+
+    await _client.storage.from('user').uploadBinary(
+          imagePath,
+          imageBytes,
+          fileOptions: FileOptions(
+            upsert: true,
+            contentType: 'image/$imageExtension',
+          ),
+        );
+    String imageUrl = _client.storage.from('user').getPublicUrl(imagePath);
+    imageUrl = Uri.parse(imageUrl).replace(queryParameters: {
+      't': DateTime.now().millisecondsSinceEpoch.toString()
+    }).toString();
+
+    await _client.from('user').update({'image_url': imageUrl}).eq('id', userId);
+    _refreshUser(userId);
   }
 }

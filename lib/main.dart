@@ -7,6 +7,7 @@ import 'package:nsf/nfs_app.dart';
 import 'package:nsf/utils/assets.dart';
 import 'package:nsf/utils/env.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   runZonedGuarded(
@@ -19,6 +20,7 @@ void main() async {
         url: ENV.SUPABASE_URL,
         anonKey: ENV.SUPABASE_ANON_KEY,
       );
+      await initializeDateFormatting('ko_KR', null);
 
       return SystemChrome.setPreferredOrientations(
         [

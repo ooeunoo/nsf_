@@ -143,9 +143,9 @@ class TodayRating extends StatelessWidget {
   }
 
   Widget _completedWod(BuildContext context, WodController controller) {
-    bool hasFirst = controller.top3Wods!.isNotEmpty;
-    bool hasSecond = controller.top3Wods!.length >= 2;
-    bool hasThrid = controller.top3Wods!.length >= 3;
+    bool hasFirst = controller.curTop3Wods!.isNotEmpty;
+    bool hasSecond = controller.curTop3Wods!.length >= 2;
+    bool hasThrid = controller.curTop3Wods!.length >= 3;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -156,13 +156,13 @@ class TodayRating extends StatelessWidget {
           children: [
             Expanded(
                 child: _rankPoster(
-                    context, hasSecond ? controller.top3Wods![1] : null, 2)),
+                    context, hasSecond ? controller.curTop3Wods![1] : null, 2)),
             Expanded(
                 child: _rankPoster(
-                    context, hasFirst ? controller.top3Wods![0] : null, 1)),
+                    context, hasFirst ? controller.curTop3Wods![0] : null, 1)),
             Expanded(
                 child: _rankPoster(
-                    context, hasThrid ? controller.top3Wods![2] : null, 3)),
+                    context, hasThrid ? controller.curTop3Wods![2] : null, 3)),
           ],
         ),
       ],
@@ -178,7 +178,8 @@ class TodayRating extends StatelessWidget {
         : rank == 2
             ? AppColor.gray400
             : AppColor.orange500;
-    final _nickname = wod == null ? '-' : wod.user.nickname ?? wod.user.name;
+    const _nickname = '알수없음';
+    // final _nickname = wod == null ? '-' : wod.user.nickname ?? wod.user.name;
     final _isCompleted = wod == null ? false : wod.completion;
     final _isSuccess =
         wod == null ? null : wod.timeLimit! >= wod.completionTime!;
@@ -187,7 +188,7 @@ class TodayRating extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         AppAvatar(
-            imageUrl: _avatarImage,
+            imageUrl: null,
             size: _avatarSize,
             rank: _rank,
             rankColor: _rankColor),
@@ -205,9 +206,9 @@ class TodayRating extends StatelessWidget {
               fontWeight: AppFontWeight.medium, color: AppColor.gray600),
         ),
         AppSpacerV(value: AppDimens.size4),
-        AppText(_nickname,
-            style: Theme.of(context).textTheme.textMD.copyWith(
-                color: AppColor.gray900, fontWeight: AppFontWeight.semibold)),
+        // AppText(_nickname,
+        //     style: Theme.of(context).textTheme.textMD.copyWith(
+        //         color: AppColor.gray900, fontWeight: AppFontWeight.semibold)),
       ],
     );
   }

@@ -30,8 +30,8 @@ class WodModel with _$WodModel {
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory WodModel({
     required int id,
-    required UserModel user,
-    required BoxModel box,
+    required String userId,
+    required int boxId,
     required DateTime date,
     required WodType type,
     @Default(0) int? timeLimit,

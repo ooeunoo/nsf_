@@ -27,8 +27,8 @@ class _MessageBarState extends State<MessageBar> {
         child: Padding(
           padding: EdgeInsets.only(
             right: AppDimens.size10,
-            left: AppDimens.size20,
-            bottom: _isKeyboardVisible ? 0 : AppDimens.size20,
+            left: AppDimens.size10,
+            bottom: _isKeyboardVisible ? 0 : AppDimens.size5,
           ),
           child: Row(
             children: [
@@ -49,7 +49,7 @@ class _MessageBarState extends State<MessageBar> {
                   },
                 ),
               ),
-              const AppSpacerH(),
+              AppSpacerH(value: AppDimens.size10),
               AppButton(
                 'send',
                 onPressed: controller.onSubmitMessage,
