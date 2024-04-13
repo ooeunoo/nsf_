@@ -20,6 +20,7 @@ class NumberForm extends StatelessWidget {
   final VoidCallback? onConfirm;
   final TextEditingController controller;
   final ValueChanged<String>? onChanged;
+  final bool disableConfirm;
 
   const NumberForm(
       {super.key,
@@ -30,10 +31,12 @@ class NumberForm extends StatelessWidget {
       this.onConfirm,
       required this.controller,
       this.onChanged,
-      this.suffixText});
+      this.suffixText,
+      this.disableConfirm = false});
 
   @override
   Widget build(BuildContext context) {
+    print(controller.text);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -91,12 +94,12 @@ class NumberForm extends StatelessWidget {
         },
         //
         if (onConfirm != null) ...{
-          Obx(() => AppButton(
-                '완료',
-                onPressed: onConfirm!,
-                disable: controller.text.isEmpty,
-                width: double.maxFinite,
-              ))
+          AppButton(
+            '완료',
+            onPressed: onConfirm!,
+            disable: controller.text.isEmpty,
+            width: double.maxFinite,
+          )
         }
       ],
     );

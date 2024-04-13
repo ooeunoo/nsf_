@@ -1,26 +1,13 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:nsf/controllers/wod/register_wod.controller.dart';
-import 'package:nsf/controllers/wod/wod.controller.dart';
 import 'package:nsf/models/forms/form_short_cut_model.dart';
 import 'package:nsf/models/forms/select_option_model.dart';
 import 'package:nsf/models/wod/wod_model.dart';
-import 'package:nsf/utils/styles/color.dart';
+import 'package:nsf/utils/extensions/string.dart';
 import 'package:nsf/utils/styles/dimens.dart';
-import 'package:nsf/utils/styles/font.dart';
-import 'package:nsf/utils/styles/theme.dart';
 import 'package:nsf/widgets/app_bottom_sheet_wrap.dart';
-import 'package:nsf/widgets/app_button.dart';
-import 'package:nsf/widgets/app_chip.dart';
-import 'package:nsf/widgets/app_handle_bar.dart';
-import 'package:nsf/widgets/app_radio_tile.dart';
-import 'package:nsf/widgets/app_spacer_v.dart';
-import 'package:nsf/widgets/app_text.dart';
-import 'package:nsf/widgets/app_text_input.dart';
 import 'package:nsf/widgets/form/number_form.dart';
 import 'package:nsf/widgets/form/selection_form.dart';
 
@@ -104,6 +91,8 @@ class _RegisterWodModalState extends State<RegisterWodModal> {
       onChanged: controller.onSelectTimeLimit,
       onConfirm: controller.onConfirm,
       selectedValue: controller.data.hasTimeLimit,
+      disableConfirm: controller.data.hasTimeLimit == true &&
+          controller.timeLimitController.text.isEmpty,
       options: [
         SelectOptionModel(
           title: '없어요',
@@ -130,6 +119,7 @@ class _RegisterWodModalState extends State<RegisterWodModal> {
       suffixText: '분 이내',
       controller: controller.timeLimitController,
       onConfirm: controller.onConfirm,
+      disableConfirm: controller.timeLimitController.value.text.isEmpty,
     );
   }
 }

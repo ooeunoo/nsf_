@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:nsf/controllers/wod/update_wod.controller.dart';
 import 'package:nsf/models/forms/form_short_cut_model.dart';
+import 'package:nsf/utils/extensions/string.dart';
 import 'package:nsf/utils/styles/dimens.dart';
 import 'package:nsf/widgets/app_bottom_sheet_wrap.dart';
 import 'package:nsf/widgets/form/multi_number_form.dart';
@@ -72,9 +73,6 @@ class _UpdateWodModalState extends State<UpdateWodModal> {
                   Visibility(
                       visible: controller.step == 1,
                       child: _inputLBS(controller, operationShortcuts)),
-                  // Visibility(
-                  //     visible: controller.step == 2,
-                  //     child: _inputTimeLimit(controller, shortcuts)),
                 ],
               ),
             ),
@@ -90,6 +88,7 @@ class _UpdateWodModalState extends State<UpdateWodModal> {
       onConfirm: controller.onConfirmTime,
       controller1: controller.minController,
       controller2: controller.secController,
+      disableConfirm: controller.data.completionTime == null,
     );
   }
 
@@ -101,6 +100,7 @@ class _UpdateWodModalState extends State<UpdateWodModal> {
         shortcuts: shortcuts,
         controller: controller.lbsController,
         onConfirm: controller.onClickLBS,
+        disableConfirm: controller.data.completionLbs == null,
         suffixText: 'lbs');
   }
 }

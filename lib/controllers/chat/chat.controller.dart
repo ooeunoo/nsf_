@@ -41,7 +41,7 @@ class ChatController extends GetxController {
 
   Stream<List<MessageModel>> _subscribeChatMessages() {
     _loading.value = true;
-    UserModel? user = _authService.user;
+    UserModel? user = _authService.user.value;
     if (user == null) {
       return const Stream.empty();
     }
@@ -71,7 +71,8 @@ class ChatController extends GetxController {
     messageController.clear();
     messageFocusNode.requestFocus();
     try {
-      UserModel user = _authService.user!;
+      UserModel? user = _authService.user.value;
+      if (user == null) return;
       String userId = user.id;
       int boxId = user.boxId!;
       CreateMessageModel data =

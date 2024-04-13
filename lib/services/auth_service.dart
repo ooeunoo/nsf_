@@ -11,17 +11,17 @@ class AuthService extends GetxService {
   AuthService() {
     _subscribeUser().listen((event) async {
       if (event == null) {
-        _user.value = null;
+        user.value = null;
         Get.offAllNamed(Routes.login);
       } else {
-        _refreshUser(event.id);
+        _refreshSignedUser(event.id);
         Get.offAllNamed(Routes.root);
       }
     });
   }
 
-  final Rx<UserModel?> _user = (null as UserModel?).obs;
-  UserModel? get user => _user.value;
+  late Stream<User?> user$;
+  final Rx<UserModel?> user = (null as UserModel?).obs;
 
   Future<bool> loginWithKakao() async {
     return _client.auth.signInWithOAuth(
@@ -36,16 +36,17 @@ class AuthService extends GetxService {
   }
 
   Stream<User?> _subscribeUser() {
-    return _client.auth.onAuthStateChange.map((event) {
+    user$ = _client.auth.onAuthStateChange.map((event) {
       return event.session?.user;
     });
+    return user$;
   }
 
-  _refreshUser(String id) async {
-    _user.value = await _getCurrentUser(id);
+  _refreshSignedUser(String id) async {
+    user.value = await getUser(id);
   }
 
-  Future<UserModel> _getCurrentUser(String id) async {
+  Future<UserModel> getUser(String id) async {
     final data = await _client
         .from(Constants.userTable)
         .select('*')
@@ -56,8 +57,7 @@ class AuthService extends GetxService {
   }
 
   Future<void> uploadProfileImage(XFile image) async {
-    if (user == null) return;
-    final String userId = user!.id;
+    final String userId = user.value!.id;
 
     final imageExtension = image.path.split('.').last.toLowerCase();
     final imageBytes = await image.readAsBytes();
@@ -72,11 +72,9 @@ class AuthService extends GetxService {
           ),
         );
     String imageUrl = _client.storage.from('user').getPublicUrl(imagePath);
-    imageUrl = Uri.parse(imageUrl).replace(queryParameters: {
-      't': DateTime.now().millisecondsSinceEpoch.toString()
-    }).toString();
+    imageUrl = Uri.parse(imageUrl).toString();
 
     await _client.from('user').update({'image_url': imageUrl}).eq('id', userId);
-    _refreshUser(userId);
+    _refreshSignedUser(userId);
   }
 }

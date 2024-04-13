@@ -13,6 +13,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class CreateWodController extends GetxController {
   final SupabaseClient _client = Supabase.instance.client;
   final AuthService _authService = Get.find();
+
   final TextEditingController timeLimitController = TextEditingController();
 
   final Rx<int> _step = 0.obs;
@@ -26,13 +27,7 @@ class CreateWodController extends GetxController {
   void onInit() {
     super.onInit();
     _initialFormData();
-    timeLimitController.addListener(() {
-      if (timeLimitController.text.isNum) {
-        _data.value = _data.value.copyWith(
-            timeLimit:
-                minuteToSecond(int.parse(timeLimitController.text)).toString());
-      }
-    });
+    timeLimitController.addListener(_updateTimeLimit);
   }
 
   @override
@@ -87,7 +82,7 @@ class CreateWodController extends GetxController {
 
   // Form Data 초기화
   void _initialFormData() {
-    UserModel? user = _authService.user;
+    UserModel? user = _authService.user.value;
     if (user == null || user.boxId == null) return _closeBottomSheet();
 
     String userId = user.id;
@@ -95,6 +90,16 @@ class CreateWodController extends GetxController {
 
     _data.value = _data.value
         .copyWith(userId: userId, boxId: boxId, date: getTodayDateTime());
+  }
+
+  _updateTimeLimit() {
+    if (timeLimitController.text.isNum) {
+      _data.value = _data.value.copyWith(
+          timeLimit:
+              minuteToSecond(int.parse(timeLimitController.text)).toString());
+    } else {
+      _data.value = _data.value.copyWith(timeLimit: null);
+    }
   }
 
   void _closeBottomSheet() {

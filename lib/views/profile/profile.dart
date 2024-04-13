@@ -18,7 +18,7 @@ class ProfileView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Obx(() => AppAvatar(
-                  imageUrl: _authService.user?.imageUrl,
+                  imageUrl: _authService.user.value!.imageUrl,
                   size: AppDimens.size60,
                   upload: true,
                 )),

@@ -18,6 +18,7 @@ class FormSelection<T> extends StatelessWidget {
   final String? chipTitle;
   final void Function(T? value) onChanged;
   final VoidCallback? onConfirm;
+  final bool disableConfirm;
 
   const FormSelection(
       {super.key,
@@ -27,7 +28,8 @@ class FormSelection<T> extends StatelessWidget {
       required this.onChanged,
       this.chipTitle,
       this.selectedValue,
-      this.onConfirm});
+      this.onConfirm,
+      this.disableConfirm = false});
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +84,7 @@ class FormSelection<T> extends StatelessWidget {
             '완료',
             onPressed: onConfirm!,
             width: double.maxFinite,
-            disable: selectedValue == null,
+            disable: selectedValue == null || disableConfirm,
           )
         }
       ],

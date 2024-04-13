@@ -19,6 +19,7 @@ class WodController extends GetxController {
   final AuthService _authService = Get.find();
   final _client = Supabase.instance.client;
 
+  final Rx<Map<String, UserModel>> _cacheUsers = Rx<Map<String, UserModel>>({});
   final RxList<WodModel> _totalWods = RxList([]);
   final RxList<WodModel> _prevTop3Wods = RxList([]);
   final RxList<WodModel> _curTop3Wods = RxList([]);
@@ -26,6 +27,7 @@ class WodController extends GetxController {
   final Rx<WodState> _myWodState = Rx<WodState>(WodState.noRegistered);
   final Rxn<int> _myWodRanking = Rxn<int>(null);
 
+  Map<String, UserModel> get cacheUsers => _cacheUsers.value;
   List<WodModel> get totalWods => _totalWods;
   List<WodModel>? get prevTop3Wods => _prevTop3Wods;
   List<WodModel>? get curTop3Wods => _curTop3Wods;
@@ -35,18 +37,24 @@ class WodController extends GetxController {
 
   @override
   void onInit() async {
-    _listenWods();
+    ever(_authService.user, (user) async {
+      if (user != null) {
+        await _listenWods();
+      }
+    });
 
     super.onInit();
   }
 
-  void _listenWods() {
-    UserModel? user = _authService.user;
+  Future<void> _listenWods() async {
+    UserModel? user = _authService.user.value;
     if (user == null) return;
     String userId = user.id;
     int boxId = user.boxId!;
-    setupWods(userId, boxId);
+    // init state
+    await _setupWods(userId, boxId);
 
+    // listen state
     _client
         .channel('${Constants.wodTable}:box_id=eq.$boxId')
         .onPostgresChanges(
@@ -59,37 +67,33 @@ class WodController extends GetxController {
               value: getTodayDateTime(),
             ),
             callback: (payload) async {
-              setupWods(userId, boxId);
+              await _setupWods(userId, boxId);
             })
         .subscribe();
   }
 
   void onOpenRegisterWodModal() {
     Get.bottomSheet(const RegisterWodModal(),
-            isDismissible: true,
-            isScrollControlled: true,
-            enableDrag: false,
-            useRootNavigator: true)
-        .whenComplete(() async {});
+        isDismissible: true,
+        isScrollControlled: true,
+        enableDrag: false,
+        useRootNavigator: true);
   }
 
   void onOpenUpdateWodModal() {
     Get.bottomSheet(UpdateWodModal(wodId: myWod!.id),
-            isDismissible: true,
-            isScrollControlled: true,
-            enableDrag: false,
-            useRootNavigator: true)
-        .whenComplete(() async {
-      notifyUpdatedWod();
-    });
+        isDismissible: true,
+        isScrollControlled: true,
+        enableDrag: false,
+        useRootNavigator: true);
   }
 
-  setupWods(String userId, int boxId) async {
+  _setupWods(String userId, int boxId) async {
     List<WodModel> wods = await _getWodsInBox(boxId);
 
     _totalWods.value = wods;
     _checkMyWod(wods, userId);
-    _checkTop3Wod(wods);
+    await _checkTop3Wod(wods);
   }
 
   Future<List<WodModel>> _getWodsInBox(int boxId) async {
@@ -110,14 +114,23 @@ class WodController extends GetxController {
       if (wod.userId != userId) return;
       bool completion = wod.completion;
       _myWod.value = wod;
+      print(wod);
       _myWodRanking.value = completion ? index : null;
       _myWodState.value =
           completion ? WodState.completed : WodState.noCompleted;
     });
   }
 
-  void _checkTop3Wod(List<WodModel> wods) {
+  Future<void> _checkTop3Wod(List<WodModel> wods) async {
     _prevTop3Wods.value = _curTop3Wods;
     _curTop3Wods.value = wods.where((wod) => wod.completion).take(3).toList();
+    for (var wod in _curTop3Wods) {
+      String targetUserId = wod.userId;
+
+      if (_cacheUsers.value.containsKey(targetUserId)) return;
+
+      UserModel targetUser = await _authService.getUser(targetUserId);
+      _cacheUsers.value[targetUserId] = targetUser;
+    }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
@@ -8,6 +9,7 @@ import 'package:nsf/services/image_picker_service.dart';
 import 'package:nsf/utils/assets.dart';
 import 'package:nsf/utils/styles/color.dart';
 import 'package:nsf/utils/styles/dimens.dart';
+import 'package:nsf/widgets/app_loader.dart';
 import 'package:nsf/widgets/app_svg.dart';
 
 class AppAvatar extends StatelessWidget {
@@ -53,10 +55,17 @@ class AppAvatar extends StatelessWidget {
               ),
             ),
             child: imageUrl != null
-                ? CircleAvatar(
-                    backgroundImage: NetworkImage(imageUrl!),
-                    backgroundColor: Colors.transparent,
-                    foregroundColor: AppColor.black,
+                ? CachedNetworkImage(
+                    imageUrl: imageUrl!,
+                    placeholder: (context, url) => const AppLoader(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    imageBuilder: (context, imageProvider) => CircleAvatar(
+                      backgroundImage: imageProvider,
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors
+                          .black, // Change to your desired foreground color
+                    ),
                   )
                 : Padding(
                     padding: const EdgeInsets.all(8.0),

@@ -19,6 +19,7 @@ class MultiNumberForm extends StatelessWidget {
   final VoidCallback? onConfirm;
   final TextEditingController? controller1;
   final TextEditingController? controller2;
+  final bool disableConfirm;
 
   final ValueChanged<String>? onChanged;
 
@@ -31,7 +32,8 @@ class MultiNumberForm extends StatelessWidget {
       this.onConfirm,
       this.controller1,
       this.controller2,
-      this.onChanged});
+      this.onChanged,
+      this.disableConfirm = false});
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +113,7 @@ class MultiNumberForm extends StatelessWidget {
             '완료',
             onPressed: onConfirm!,
             width: double.maxFinite,
+            disable: disableConfirm,
           )
         }
       ],

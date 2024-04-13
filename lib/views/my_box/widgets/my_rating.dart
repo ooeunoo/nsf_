@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:nsf/controllers/wod/wod.controller.dart';
 import 'package:nsf/mocks/image.dart';
 import 'package:nsf/nfs_translation.dart';
+import 'package:nsf/services/auth_service.dart';
 import 'package:nsf/utils/assets.dart';
 import 'package:nsf/utils/styles/color.dart';
 import 'package:nsf/utils/styles/dimens.dart';
@@ -22,6 +23,7 @@ class MyRating extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthService authService = Get.find();
     final WodController controller = Get.find();
 
     return Container(
@@ -39,7 +41,9 @@ class MyRating extends StatelessWidget {
           children: [
             Row(
               children: [
-                AppAvatar(imageUrl: mockAvatarUrl, size: AppDimens.size40),
+                Obx(() => AppAvatar(
+                    imageUrl: authService.user.value?.imageUrl,
+                    size: AppDimens.size40)),
                 const AppSpacerH(),
                 Obx(() => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

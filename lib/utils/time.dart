@@ -6,7 +6,8 @@ DateTime getTodayDateTime() {
   return dateOnly;
 }
 
-int minuteToSecond(int minutes) {
+int? minuteToSecond(int? minutes) {
+  if (minutes == null) return null;
   return minutes * 60;
 }
 
