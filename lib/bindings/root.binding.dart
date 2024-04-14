@@ -14,6 +14,7 @@ class RootBinding implements Bindings {
     Get.lazyPut<WodController>(() => WodController());
     Get.lazyPut<CreateWodController>(() => CreateWodController(), fenix: true);
     Get.lazyPut<UpdateWodController>(() => UpdateWodController(), fenix: true);
-    Get.lazyPut<ChatController>(() => ChatController(), fenix: true);
+    Get.lazyPut<ChatController>(() => ChatController());
+    // Get.put<ChatController>(ChatController());
   }
 }

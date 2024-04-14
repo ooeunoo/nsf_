@@ -39,15 +39,6 @@ class ChatController extends GetxController {
     super.onInit();
   }
 
-  @override
-  onClose() {
-    subscribers.clear();
-    messageFocusNode.dispose();
-    messageController.dispose();
-    scrollController.dispose();
-    super.onClose();
-  }
-
   void onSubmitMessage() async {
     String text = messageController.text;
     if (text.isEmpty) {

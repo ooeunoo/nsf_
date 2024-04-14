@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nsf/utils/styles/color.dart';
 import 'package:nsf/utils/styles/dimens.dart';
 import 'package:nsf/views/chat/widgets/chat_room.dart';
 

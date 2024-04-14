@@ -29,70 +29,69 @@ class ChatRoom extends StatelessWidget {
   Widget build(BuildContext context) {
     ChatController controller = Get.find<ChatController>();
 
-    return Obx(() {
-      if (controller.loading) {
-        return const Center(child: AppLoader());
-      }
+    // return
+    //   if (controller.loading) {
+    //     return const Center(child: AppLoader());
+    //   }
 
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () => controller.messageFocusNode.unfocus(),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: SingleChildScrollView(
-                  controller: controller.scrollController,
-                  reverse: reverse,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // if (controller.subscribers.isEmpty)
-                      //   Center(
-                      //     child: AppText(
-                      //       '대화를 시작해보세요 :)',
-                      //       style: Theme.of(context)
-                      //           .textTheme
-                      //           .textXL
-                      //           .copyWith(color: AppColor.gray600),
-                      //     ),
-                      //   ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const ClampingScrollPhysics(),
-                        reverse: reverse,
-                        itemCount: controller.subscribers.length,
-                        itemBuilder: (context, index) => Obx(() {
-                          final message = controller.subscribers[index];
-                          final UserModel? user =
-                              controller.cacheUsers[message.userId];
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: GestureDetector(
+            onTap: () => controller.messageFocusNode.unfocus(),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: SingleChildScrollView(
+                controller: controller.scrollController,
+                reverse: reverse,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // if (controller.subscribers.isEmpty)
+                    //   Center(
+                    //     child: AppText(
+                    //       '대화를 시작해보세요 :)',
+                    //       style: Theme.of(context)
+                    //           .textTheme
+                    //           .textXL
+                    //           .copyWith(color: AppColor.gray600),
+                    //     ),
+                    //   ),
+                    Obx(() => ListView.builder(
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
+                          reverse: reverse,
+                          itemCount: controller.subscribers.length,
+                          itemBuilder: (context, index) => Obx(() {
+                            final message = controller.subscribers[index];
+                            final UserModel? user =
+                                controller.cacheUsers[message.userId];
 
-                          if (user == null) {
-                            controller.cachingUser(message.userId);
-                          }
+                            if (user == null) {
+                              controller.cachingUser(message.userId);
+                            }
 
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: horizontalPadding ?? 0),
-                            child: MessageBubble(
-                              message: message,
-                              user: user,
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
-                  ),
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: horizontalPadding ?? 0),
+                              child: MessageBubble(
+                                message: message,
+                                user: user,
+                              ),
+                            );
+                          }),
+                        )),
+                  ],
                 ),
               ),
             ),
           ),
-          // Display MessageBar at the bottom
-          if (!onlyMessage) const MessageBar(),
-        ],
-      );
-    });
+        ),
+        // Display MessageBar at the bottom
+        if (!onlyMessage) const MessageBar(),
+      ],
+    );
   }
 }

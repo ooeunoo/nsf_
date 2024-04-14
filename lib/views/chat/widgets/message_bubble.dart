@@ -121,6 +121,7 @@ class MessageBubble extends StatelessWidget {
   Widget _otherBubble(BuildContext context) {
     return Expanded(
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.1,
@@ -145,7 +146,7 @@ class MessageBubble extends StatelessWidget {
                             ),
                       ),
                       AppText(
-                        format(message.createdAt),
+                        formatCreatedAt(message.createdAt),
                         style: Theme.of(context).textTheme.textXS.copyWith(
                               color: AppColor.gray600,
                               fontWeight: AppFontWeight.regular,
