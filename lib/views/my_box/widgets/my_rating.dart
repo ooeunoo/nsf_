@@ -23,8 +23,8 @@ class MyRating extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AuthService authService = Get.find();
-    final WodController controller = Get.find();
+    final AuthService authService = Get.find<AuthService>();
+    final WodController controller = Get.find<WodController>();
 
     return Container(
         padding: EdgeInsets.symmetric(

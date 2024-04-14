@@ -34,6 +34,18 @@ class LoginView extends StatelessWidget {
           Positioned(
               left: 20,
               right: 20,
+              bottom: AppDimens.size200v,
+              child: AppButton('애플 로그인',
+                  height: AppDimens.size50,
+                  titleStyle: Theme.of(context).textTheme.textLG.copyWith(
+                      color: AppColor.gray900, fontWeight: AppFontWeight.bold),
+                  color: AppColor.white,
+                  borderColor: AppColor.white, onPressed: () {
+                _authService.loginWithApple();
+              })),
+          Positioned(
+              left: 20,
+              right: 20,
               bottom: AppDimens.size100v,
               child: AppButton('카카오 로그인',
                   height: AppDimens.size50,

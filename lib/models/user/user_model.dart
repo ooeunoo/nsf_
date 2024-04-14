@@ -14,7 +14,7 @@ class UserModel with _$UserModel {
   const factory UserModel(
       {required String id,
       required String email,
-      required String name,
+      String? name,
       String? nickname,
       String? imageUrl,
       int? boxId}) = _UserModel;

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:nsf/controllers/chat/chat.controller.dart';
 import 'package:nsf/models/message/message_model.dart';
+import 'package:nsf/models/user/user_model.dart';
 import 'package:nsf/utils/styles/color.dart';
 import 'package:nsf/utils/styles/dimens.dart';
 import 'package:nsf/utils/styles/font.dart';
@@ -14,8 +17,13 @@ import 'package:timeago/timeago.dart';
 
 class MessageBubble extends StatelessWidget {
   final MessageModel message;
+  final UserModel? user;
 
-  const MessageBubble({super.key, required this.message});
+  const MessageBubble({
+    super.key,
+    required this.message,
+    this.user,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +124,7 @@ class MessageBubble extends StatelessWidget {
         children: [
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.1,
-            child: AppAvatar(),
+            child: AppAvatar(imageUrl: user?.imageUrl),
           ),
           AppSpacerH(value: AppDimens.size10),
           Expanded(
@@ -130,7 +138,7 @@ class MessageBubble extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AppText(
-                        '유윤상',
+                        user?.name ?? user?.nickname ?? '알수없음',
                         style: Theme.of(context).textTheme.textSM.copyWith(
                               color: AppColor.gray700,
                               fontWeight: AppFontWeight.medium,

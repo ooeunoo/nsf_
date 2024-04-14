@@ -8,7 +8,7 @@
 PRODUCT_NAME = nsf
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.nsf
+PRODUCT_BUNDLE_IDENTIFIER = com.miriarea.nsf
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2024 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2024 com.miriarea. All rights reserved.

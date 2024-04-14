@@ -8,6 +8,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class AuthService extends GetxService {
   final _client = Supabase.instance.client;
 
+  late Stream<User?> user$;
+  final Rx<UserModel?> user = (null as UserModel?).obs;
+
   AuthService() {
     _subscribeUser().listen((event) async {
       if (event == null) {
@@ -20,14 +23,17 @@ class AuthService extends GetxService {
     });
   }
 
-  late Stream<User?> user$;
-  final Rx<UserModel?> user = (null as UserModel?).obs;
-
   Future<bool> loginWithKakao() async {
     return _client.auth.signInWithOAuth(
       OAuthProvider.kakao,
       redirectTo: Constants.loginRedirectTo,
       authScreenLaunchMode: LaunchMode.platformDefault,
+    );
+  }
+
+  Future<bool> loginWithApple() async {
+    return _client.auth.signInWithOAuth(
+      OAuthProvider.apple,
     );
   }
 
@@ -57,7 +63,8 @@ class AuthService extends GetxService {
   }
 
   Future<void> uploadProfileImage(XFile image) async {
-    final String userId = user.value!.id;
+    final String? userId = user.value?.id;
+    if (userId == null) return;
 
     final imageExtension = image.path.split('.').last.toLowerCase();
     final imageBytes = await image.readAsBytes();

@@ -48,9 +48,11 @@ class WodController extends GetxController {
 
   Future<void> _listenWods() async {
     UserModel? user = _authService.user.value;
-    if (user == null) return;
+
+    if (user == null || user.boxId == null) return;
     String userId = user.id;
     int boxId = user.boxId!;
+
     // init state
     await _setupWods(userId, boxId);
 
@@ -110,15 +112,22 @@ class WodController extends GetxController {
   }
 
   void _checkMyWod(List<WodModel> wods, String userId) {
+    bool hasMyWod = false;
     wods.asMap().forEach((index, wod) {
       if (wod.userId != userId) return;
+      hasMyWod = true;
       bool completion = wod.completion;
       _myWod.value = wod;
-      print(wod);
       _myWodRanking.value = completion ? index : null;
       _myWodState.value =
           completion ? WodState.completed : WodState.noCompleted;
     });
+
+    if (!hasMyWod) {
+      _myWod.value = null;
+      _myWodRanking.value = null;
+      _myWodState.value = WodState.noRegistered;
+    }
   }
 
   Future<void> _checkTop3Wod(List<WodModel> wods) async {

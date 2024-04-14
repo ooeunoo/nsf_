@@ -36,7 +36,6 @@ class NumberForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(controller.text);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
