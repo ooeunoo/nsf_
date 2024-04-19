@@ -22,7 +22,6 @@ class ChatController extends GetxController {
   RxList<MessageModel> subscribers = RxList<MessageModel>([]).obs();
 
   bool get loading => _loading.value;
-  // Map<String, UserModel> get cacheUsers => _cacheUsers.value;
 
   @override
   onInit() {
